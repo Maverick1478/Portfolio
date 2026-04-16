@@ -613,9 +613,9 @@ export default function App() {
               </div>
               <div className="services-grid">
                 {SERVICES.map((s, i) => (
-                  <TiltCard key={s.id} className="service-card reveal" style={{ '--delay': `${i * 0.15}s` }}>
+                  <div key={s.id} className="service-card reveal" style={{ '--delay': `${i * 0.15}s` }}>
                     <div className="service-icon">{s.icon}</div>
-                    <ScrambleTitle text={s.title} className="service-title" />
+                    <h3 className="service-title">{s.title}</h3>
                     <p className="service-desc">{s.description}</p>
                     <ul className="service-features">
                       {s.features.map(f => <li key={f}><span className="fmark">✦</span>{f}</li>)}
@@ -624,7 +624,7 @@ export default function App() {
                       <span className="service-price">Devis sur demande</span>
                       <MagBtn className="btn btn--ghost btn--sm" onClick={() => scrollTo('contact')}>Demander un devis</MagBtn>
                     </div>
-                  </TiltCard>
+                  </div>
                 ))}
               </div>
             </div>

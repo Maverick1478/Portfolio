@@ -759,17 +759,13 @@ body {
   background:var(--bg-card); border:1.5px solid var(--border); border-radius:var(--r);
   padding:2.5rem; display:flex; flex-direction:column; gap:1.1rem;
   box-shadow:var(--sh); backdrop-filter:blur(10px);
-  animation-delay:var(--delay,0s); cursor:default;
-  transition:border-color 0.28s, box-shadow 0.28s, background 0.28s, transform 0.28s;
-  will-change:transform; transform-style:preserve-3d;
+  animation-delay:var(--delay,0s);
 }
-.service-card:hover { border-color:var(--border-h); box-shadow:var(--sh-h); background:var(--bg-card-h); }
 .service-icon { font-size:1.7rem; color:var(--green); line-height:1; }
 .service-title {
   font-family:var(--fd); font-size:1.85rem; font-weight:700;
   letter-spacing:-0.01em; cursor:default; transition:color 0.2s;
 }
-.service-card:hover .service-title { color:var(--green); }
 .service-desc { font-size:15px; color:var(--muted); line-height:1.78; flex:1; }
 .service-features { list-style:none; display:flex; flex-direction:column; gap:0.6rem; }
 .service-features li { font-size:14px; color:var(--muted); display:flex; align-items:center; gap:0.7rem; }
@@ -901,7 +897,7 @@ body {
 @media (max-width: 960px) { .projects-grid { grid-template-columns:1fr 1fr; } }
 @media (max-width: 768px) {
   .nav-links { display:none; }
-  .nav-links--open { display:flex; flex-direction:column; position:fixed; top:var(--nav-h); left:0;right:0; background:rgba(250,247,242,0.96); backdrop-filter:blur(20px); border-bottom:1px solid var(--border); padding:1rem 1.25rem; gap:0.2rem; }
+  .nav-links--open { display:flex; flex-direction:column; position:fixed; top:var(--nav-h); left:0;right:0; background:rgba(250,247,242,0.97); border-bottom:1px solid var(--border); padding:1rem 1.25rem; gap:0.2rem; }
   .nav-burger { display:flex; }
   .nav-cta { display:none; }
   .hero-container { grid-template-columns:1fr; gap:3rem; }
@@ -919,6 +915,65 @@ body {
   .hero-actions .btn { width:100%; justify-content:center; }
   .ldr-ac { font-size:3rem; }
   .ldr-letter { font-size:1.6rem; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   MOBILE PERFORMANCE — suppression des effets GPU lourds
+   filter:blur() et backdrop-filter tuent les GPU mobiles
+═══════════════════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+
+  /* ── Supprime tous les éléments avec filter:blur() ── */
+  .particle-canvas,
+  .aurora,
+  .hfog,
+  .hero-glow,
+  .hblob,
+  .sm,
+  .hflare { display: none !important; }
+
+  /* ── Shooting stars : garde seulement 1 ── */
+  .shoot--2, .shoot--3, .shoot--4, .shoot--5 { display: none !important; }
+
+  /* ── Étoiles : max 8 par section ── */
+  .sf > *:nth-child(n+9) { display: none !important; }
+
+  /* ── Anneaux : garde l'animation mais réduit l'opacité ── */
+  .hring, .sr { animation-duration: 0s !important; }
+
+  /* ── Supprime les petites décorations ── */
+  .sd, .sdiam, .spulse,
+  .pj-beam, .pj-corner,
+  .sec-div-gem { display: none !important; }
+
+  /* ── Nav : remplace backdrop-filter par fond solide ── */
+  .nav, .nav--scrolled {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: rgba(250,247,242,0.98) !important;
+  }
+
+  /* ── Cartes : supprime backdrop-filter et will-change ── */
+  .service-card, .project-card {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    transform-style: flat !important;
+    will-change: auto !important;
+  }
+
+  /* ── Grain : désactivé sur mobile ── */
+  .grain { display: none !important; }
+
+  /* ── Loading screen : simplifié ── */
+  .ldr-glow { display: none !important; }
+
+  /* ── Supprime will-change partout (libère mémoire GPU) ── */
+  * { will-change: auto !important; }
+}
+
+/* Respect du mode "réduire les animations" (accessibilité) */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
