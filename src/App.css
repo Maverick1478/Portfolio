@@ -1529,7 +1529,7 @@ body {
 .section--forest input:not(:placeholder-shown) ~ label,
 .section--forest textarea:not(:placeholder-shown) ~ label { color: rgba(200,168,92,0.9); }
 .section--forest .btn--primary { background:rgba(200,168,92,0.9); border-color:rgba(200,168,92,0.9); color:#0e2018; }
-.section--forest .btn--primary:hover { background:#c8a85c; box-shadow:0 8px 28px rgba(200,168,92,0.3); }
+.section--forest .btn--primary:hover { background:rgba(200,168,92,0.9); border-color:rgba(200,168,92,0.9); transform:none; box-shadow:none; }
 .section--forest .form-success { background:rgba(74,140,110,0.2); border-color:rgba(74,140,110,0.4); }
 /* Contact rings on dark bg */
 .section--forest .sr--ct1 { border-color:rgba(240,232,213,0.05); }
