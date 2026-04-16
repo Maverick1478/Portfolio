@@ -526,6 +526,13 @@ export default function App() {
                   Étudiant Supinfo · 3ème année
                 </p>
 
+                {/* Avatar compact — visible uniquement sur mobile */}
+                <div className="hero-mob-av">
+                  <span className="hero-mob-av-ring" />
+                  <span className="hero-mob-av-ring hero-mob-av-ring--2" />
+                  AC
+                </div>
+
                 <h1 className="hero-name" aria-label="Andrea Coustenoble">
                   <span className="hero-name-line">
                     <SplitText text="Andrea" animate={loaded} delay={0.1} className="hn-first" />
