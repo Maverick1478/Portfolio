@@ -3,7 +3,7 @@ import './App.css'
 
 // ── Web3Forms — va sur web3forms.com, entre maverickjet12@gmail.com ───────────
 // Tu reçois ta clé par email → remplace la valeur ci-dessous
-const W3F_KEY = 'YOUR_ACCESS_KEY'
+const W3F_KEY = '1c6f1269-cc49-4b16-bae9-d7d8462d8e1a'
 
 // ── Data ──────────────────────────────────────────────────────────────────────
 const NAV_ITEMS = ['about', 'services', 'projects', 'skills', 'contact']
