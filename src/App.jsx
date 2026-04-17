@@ -257,7 +257,9 @@ function Divider() {
   return (
     <div className="sec-div" aria-hidden="true">
       <span className="sec-div-line" />
+      <span className="sec-div-dot sec-div-dot--l" />
       <span className="sec-div-gem">◆</span>
+      <span className="sec-div-dot sec-div-dot--r" />
       <span className="sec-div-line" />
     </div>
   )
@@ -535,30 +537,39 @@ export default function App() {
           {/* ── HERO ── */}
           <section id="about" className="section section--hero">
             <ParticleCanvas />
-            {/* Aurora bands — 3 au lieu de 5 */}
+            {/* Animated grid overlay */}
+            <div className="hero-grid" />
+            {/* Shimmer sweep */}
+            <div className="hero-shimmer" />
+            {/* Aurora bands */}
             <div className="aurora aurora--1" />
             <div className="aurora aurora--2" />
             <div className="aurora aurora--3" />
-            {/* Fog nebula — 2 au lieu de 3 */}
+            {/* Fog nebula */}
             <div className="hfog hfog--1" />
             <div className="hfog hfog--2" />
             {/* Lens flare */}
             <div className="hflare" />
-            {/* Shooting stars — 2 au lieu de 5 */}
+            {/* Shooting stars — 5 étoiles filantes */}
             <div className="shoot shoot--1" />
             <div className="shoot shoot--2" />
+            <div className="shoot shoot--3" />
+            <div className="shoot shoot--4" />
+            <div className="shoot shoot--5" />
             {/* Glows + blobs */}
             <div className="hero-glow hero-glow--1" />
             <div className="hero-glow hero-glow--2" />
             <div className="hblob hblob--1" />
             <div className="hblob hblob--2" />
-            {/* Floating rings — 4 au lieu de 6 */}
+            {/* Floating rings — 6 */}
             <div className="hring hring--1" />
             <div className="hring hring--2" />
             <div className="hring hring--3" />
             <div className="hring hring--4" />
-            {/* Stars réduit */}
-            <StarField count={22} />
+            <div className="hring hring--5" />
+            <div className="hring hring--6" />
+            {/* Stars */}
+            <StarField count={28} />
 
             <div className="container hero-container">
               <div className="hero-content">
@@ -730,6 +741,8 @@ export default function App() {
             <Decor>
               <div className="sr sr--sk1" /><div className="sr sr--sk2" /><div className="sr sr--sk3" />
               <div className="sm sm--sk" />
+              <div className="sk-rays" />
+              <div className="sk-glow" />
               <div className="sdiam sdiam--4" /><div className="sdiam sdiam--5" />
               <div className="sd sd--6" /><div className="sd sd--7" /><div className="sd sd--8" />
             </Decor>
@@ -759,12 +772,14 @@ export default function App() {
           <Divider />
 
           {/* ── TESTIMONIALS ── */}
-          <section className="section section--alt">
-            <StarField count={8} />
+          <section className="section section--alt section--tm">
+            <StarField count={10} />
+            <div className="tm-quote" aria-hidden="true">❝</div>
             <Decor>
-              <div className="sr sr--tm1" /><div className="sr sr--tm2" />
-              <div className="sm sm--tm" />
-              <div className="sd sd--9" /><div className="sd sd--10" />
+              <div className="sr sr--tm1" /><div className="sr sr--tm2" /><div className="sr sr--tm3" />
+              <div className="sm sm--tm" /><div className="sm sm--tm2" />
+              <div className="tm-beam tm-beam--1" /><div className="tm-beam tm-beam--2" />
+              <div className="sd sd--9" /><div className="sd sd--10" /><div className="sd sd--11" />
             </Decor>
             <div className="container">
               <div className="section-header reveal">
