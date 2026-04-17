@@ -1,5 +1,11 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
+import emailjs from '@emailjs/browser'
 import './App.css'
+
+// ── EmailJS — remplir après création du compte sur emailjs.com ────────────────
+const EJS_SERVICE  = 'YOUR_SERVICE_ID'   // Email Services → ton Service ID
+const EJS_TEMPLATE = 'YOUR_TEMPLATE_ID'  // Email Templates → ton Template ID
+const EJS_KEY      = 'YOUR_PUBLIC_KEY'   // Account → General → Public Key
 
 // ── Data ──────────────────────────────────────────────────────────────────────
 const NAV_ITEMS = ['about', 'services', 'projects', 'skills', 'contact']
@@ -412,6 +418,8 @@ export default function App() {
   const [navScrolled,  setNavScrolled] = useState(false)
   const [formData,     setFormData]    = useState({ name: '', email: '', message: '' })
   const [sent,         setSent]        = useState(false)
+  const [sending,      setSending]     = useState(false)
+  const [sendError,    setSendError]   = useState(false)
   const roleText = useTypewriter(ROLES)
   useScrollReveal()
 
@@ -436,10 +444,25 @@ export default function App() {
 
   const scrollTo = id => { document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' }); setMenuOpen(false) }
 
-  const handleSubmit = e => {
-    e.preventDefault(); setSent(true)
-    setFormData({ name: '', email: '', message: '' })
-    setTimeout(() => setSent(false), 4000)
+  const handleSubmit = async e => {
+    e.preventDefault()
+    setSending(true); setSendError(false)
+    try {
+      await emailjs.send(EJS_SERVICE, EJS_TEMPLATE, {
+        from_name:  formData.name,
+        from_email: formData.email,
+        message:    formData.message,
+        to_email:   'maverickjet12@gmail.com',
+      }, EJS_KEY)
+      setSent(true)
+      setFormData({ name: '', email: '', message: '' })
+      setTimeout(() => setSent(false), 5000)
+    } catch {
+      setSendError(true)
+      setTimeout(() => setSendError(false), 4000)
+    } finally {
+      setSending(false)
+    }
   }
 
   return (
@@ -775,7 +798,14 @@ export default function App() {
                       value={formData.message} onChange={e => setFormData({ ...formData, message: e.target.value })} />
                     <label htmlFor="message">Message</label>
                   </div>
-                  <MagBtn type="submit" className="btn btn--primary btn--full">Envoyer le message</MagBtn>
+                  {sendError && (
+                    <div className="form-error">
+                      Une erreur est survenue — réessaie ou écris directement à maverickjet12@gmail.com
+                    </div>
+                  )}
+                  <MagBtn type="submit" className="btn btn--primary btn--full" disabled={sending}>
+                    {sending ? 'Envoi en cours…' : 'Envoyer le message'}
+                  </MagBtn>
                 </form>
               )}
             </div>
