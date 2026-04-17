@@ -159,29 +159,35 @@ function ParticleCanvas() {
   const ref = useRef(null)
   useEffect(() => {
     const canvas = ref.current; if (!canvas) return
-    const ctx = canvas.getContext('2d')
-    let id
+    const ctx = canvas.getContext('2d', { alpha: true })
+    let id, visible = true
     const resize = () => { canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight }
-    resize(); window.addEventListener('resize', resize)
+    resize(); window.addEventListener('resize', resize, { passive: true })
+    // Pause le RAF quand le hero est hors écran → 0 CPU/GPU gaspillé
+    const obs = new IntersectionObserver(([e]) => { visible = e.isIntersecting }, { threshold: 0 })
+    obs.observe(canvas)
     class P {
-      constructor() { this.x=Math.random()*canvas.width; this.y=Math.random()*canvas.height; this.vx=(Math.random()-.5)*.28; this.vy=(Math.random()-.5)*.28; this.r=Math.random()*1.4+.4 }
+      constructor() { this.x=Math.random()*canvas.width; this.y=Math.random()*canvas.height; this.vx=(Math.random()-.5)*.2; this.vy=(Math.random()-.5)*.2; this.r=Math.random()*1.1+.3 }
       tick() { this.x+=this.vx; this.y+=this.vy; if(this.x<0||this.x>canvas.width)this.vx*=-1; if(this.y<0||this.y>canvas.height)this.vy*=-1 }
-      draw() { ctx.beginPath(); ctx.arc(this.x,this.y,this.r,0,Math.PI*2); ctx.fillStyle='rgba(74,140,110,0.22)'; ctx.fill() }
+      draw() { ctx.beginPath(); ctx.arc(this.x,this.y,this.r,0,Math.PI*2); ctx.fillStyle='rgba(74,140,110,0.18)'; ctx.fill() }
     }
-    const pts = Array.from({ length: Math.min(Math.floor(canvas.width*canvas.height/13000), 60) }, () => new P())
+    // Densité réduite : 22000 au lieu de 13000, max 32 au lieu de 60
+    const pts = Array.from({ length: Math.min(Math.floor(canvas.width*canvas.height/22000), 32) }, () => new P())
+    const DIST = 85
     const loop = () => {
+      id = requestAnimationFrame(loop)
+      if (!visible) return   // ne dessine rien quand hors viewport
       ctx.clearRect(0,0,canvas.width,canvas.height)
       for(let i=0;i<pts.length;i++){
         pts[i].tick(); pts[i].draw()
         for(let j=i+1;j<pts.length;j++){
           const dx=pts[i].x-pts[j].x, dy=pts[i].y-pts[j].y, d=Math.hypot(dx,dy)
-          if(d<105){ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);ctx.strokeStyle=`rgba(74,140,110,${(1-d/105)*.1})`;ctx.lineWidth=.5;ctx.stroke()}
+          if(d<DIST){ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);ctx.strokeStyle=`rgba(74,140,110,${(1-d/DIST)*.08})`;ctx.lineWidth=.5;ctx.stroke()}
         }
       }
-      id = requestAnimationFrame(loop)
     }
     loop()
-    return () => { cancelAnimationFrame(id); window.removeEventListener('resize', resize) }
+    return () => { cancelAnimationFrame(id); obs.disconnect(); window.removeEventListener('resize', resize) }
   }, [])
   return <canvas ref={ref} className="particle-canvas" />
 }
@@ -485,40 +491,30 @@ export default function App() {
           {/* ── HERO ── */}
           <section id="about" className="section section--hero">
             <ParticleCanvas />
-            {/* Aurora bands */}
+            {/* Aurora bands — 3 au lieu de 5 */}
             <div className="aurora aurora--1" />
             <div className="aurora aurora--2" />
             <div className="aurora aurora--3" />
-            <div className="aurora aurora--4" />
-            <div className="aurora aurora--5" />
-            {/* Fog nebula */}
+            {/* Fog nebula — 2 au lieu de 3 */}
             <div className="hfog hfog--1" />
             <div className="hfog hfog--2" />
-            <div className="hfog hfog--3" />
             {/* Lens flare */}
             <div className="hflare" />
-            {/* Shooting stars */}
+            {/* Shooting stars — 2 au lieu de 5 */}
             <div className="shoot shoot--1" />
             <div className="shoot shoot--2" />
-            <div className="shoot shoot--3" />
-            <div className="shoot shoot--4" />
-            <div className="shoot shoot--5" />
-            {/* Morphing blobs */}
+            {/* Glows + blobs */}
             <div className="hero-glow hero-glow--1" />
             <div className="hero-glow hero-glow--2" />
-            <div className="hero-glow hero-glow--3" />
             <div className="hblob hblob--1" />
             <div className="hblob hblob--2" />
-            <div className="hblob hblob--3" />
-            {/* Floating rings */}
+            {/* Floating rings — 4 au lieu de 6 */}
             <div className="hring hring--1" />
             <div className="hring hring--2" />
             <div className="hring hring--3" />
             <div className="hring hring--4" />
-            <div className="hring hring--5" />
-            <div className="hring hring--6" />
-            {/* Stars */}
-            <StarField count={65} />
+            {/* Stars réduit */}
+            <StarField count={22} />
 
             <div className="container hero-container">
               <div className="hero-content">
@@ -611,7 +607,7 @@ export default function App() {
               <div className="sd sd--1" /><div className="sd sd--2" /><div className="sd sd--3" />
               <div className="sd sd--4" /><div className="sd sd--5" />
             </Decor>
-            <StarField count={38} dark />
+            <StarField count={14} dark />
             <div className="container">
               <div className="section-header reveal">
                 <span className="section-label">Ce que je propose</span>
@@ -641,7 +637,7 @@ export default function App() {
 
           {/* ── PROJECTS ── */}
           <section id="projects" className="section section--alt">
-            <StarField count={28} />
+            <StarField count={10} />
             <Decor>
               <div className="sr sr--pj1" /><div className="sr sr--pj2" /><div className="sr sr--pj3" /><div className="sr sr--pj4" />
               <div className="sm sm--pj" /><div className="sm sm--pj2" />
@@ -686,7 +682,7 @@ export default function App() {
 
           {/* ── SKILLS ── */}
           <section id="skills" className="section">
-            <StarField count={22} />
+            <StarField count={10} />
             <Decor>
               <div className="sr sr--sk1" /><div className="sr sr--sk2" /><div className="sr sr--sk3" />
               <div className="sm sm--sk" />
@@ -720,7 +716,7 @@ export default function App() {
 
           {/* ── TESTIMONIALS ── */}
           <section className="section section--alt">
-            <StarField count={18} />
+            <StarField count={8} />
             <Decor>
               <div className="sr sr--tm1" /><div className="sr sr--tm2" />
               <div className="sm sm--tm" />
@@ -744,7 +740,7 @@ export default function App() {
 
           {/* ── CONTACT ── */}
           <section id="contact" className="section section--forest">
-            <StarField count={28} dark />
+            <StarField count={14} dark />
             <Decor>
               <div className="sr sr--ct1" /><div className="sr sr--ct2" /><div className="sr sr--ct3" />
               <div className="sm sm--ct" />
