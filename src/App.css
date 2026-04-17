@@ -883,8 +883,20 @@ body {
 .form-field--textarea.form-field--float textarea:focus ~ label { top: 0.6rem; }
 
 .form-success { background:var(--green-dim); border:1.5px solid rgba(74,140,110,0.35); color:var(--green); border-radius:10px; padding:1.25rem 1.75rem; font-size:15px; text-align:center; }
-.form-error { background:rgba(180,60,60,0.08); border:1.5px solid rgba(180,60,60,0.25); color:#9b3a3a; border-radius:10px; padding:1rem 1.5rem; font-size:14px; text-align:center; }
+.form-error { background:rgba(180,60,60,0.07); border:1.5px solid rgba(180,60,60,0.22); color:#9b3a3a; border-radius:10px; padding:1rem 1.5rem; font-size:14px; text-align:center; }
 .btn:disabled { opacity:0.6; cursor:not-allowed; transform:none !important; box-shadow:none !important; }
+
+/* Validation inline */
+.form-field--error { border-color: rgba(180,60,60,0.5) !important; }
+.form-field--error:focus-within { border-color: rgba(180,60,60,0.7) !important; box-shadow: 0 0 0 3px rgba(180,60,60,0.07) !important; }
+.field-error {
+  display: block;
+  font-family: var(--fu);
+  font-size: 11px; font-weight: 600;
+  color: #9b3a3a;
+  padding: 0.35rem 1rem 0.5rem;
+  letter-spacing: 0.03em;
+}
 
 /* ═══════════════════════════════════════════════════════════════════════════
    FOOTER

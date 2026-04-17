@@ -1,11 +1,9 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
-import emailjs from '@emailjs/browser'
 import './App.css'
 
-// ── EmailJS — remplir après création du compte sur emailjs.com ────────────────
-const EJS_SERVICE  = 'YOUR_SERVICE_ID'   // Email Services → ton Service ID
-const EJS_TEMPLATE = 'YOUR_TEMPLATE_ID'  // Email Templates → ton Template ID
-const EJS_KEY      = 'YOUR_PUBLIC_KEY'   // Account → General → Public Key
+// ── Web3Forms — va sur web3forms.com, entre maverickjet12@gmail.com ───────────
+// Tu reçois ta clé par email → remplace la valeur ci-dessous
+const W3F_KEY = 'YOUR_ACCESS_KEY'
 
 // ── Data ──────────────────────────────────────────────────────────────────────
 const NAV_ITEMS = ['about', 'services', 'projects', 'skills', 'contact']
@@ -417,6 +415,7 @@ export default function App() {
   const [showTop,      setShowTop]     = useState(false)
   const [navScrolled,  setNavScrolled] = useState(false)
   const [formData,     setFormData]    = useState({ name: '', email: '', message: '' })
+  const [formErrors,   setFormErrors]  = useState({})
   const [sent,         setSent]        = useState(false)
   const [sending,      setSending]     = useState(false)
   const [sendError,    setSendError]   = useState(false)
@@ -444,22 +443,44 @@ export default function App() {
 
   const scrollTo = id => { document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' }); setMenuOpen(false) }
 
+  const validateForm = () => {
+    const e = {}
+    if (!formData.name.trim() || formData.name.trim().length < 2)
+      e.name = 'Merci d\'indiquer ton nom (min. 2 caractères)'
+    if (!formData.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(formData.email))
+      e.email = 'Adresse email invalide'
+    if (!formData.message.trim() || formData.message.trim().length < 10)
+      e.message = 'Message trop court (min. 10 caractères)'
+    return e
+  }
+
   const handleSubmit = async e => {
     e.preventDefault()
+    const errors = validateForm()
+    if (Object.keys(errors).length) { setFormErrors(errors); return }
+    setFormErrors({})
     setSending(true); setSendError(false)
     try {
-      await emailjs.send(EJS_SERVICE, EJS_TEMPLATE, {
-        from_name:  formData.name,
-        from_email: formData.email,
-        message:    formData.message,
-        to_email:   'maverickjet12@gmail.com',
-      }, EJS_KEY)
-      setSent(true)
-      setFormData({ name: '', email: '', message: '' })
-      setTimeout(() => setSent(false), 5000)
+      const res = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({
+          access_key: W3F_KEY,
+          subject:    'Nouveau message — Portfolio Andrea Coustenoble',
+          name:       formData.name,
+          email:      formData.email,
+          message:    formData.message,
+        }),
+      })
+      const data = await res.json()
+      if (data.success) {
+        setSent(true)
+        setFormData({ name: '', email: '', message: '' })
+        setTimeout(() => setSent(false), 6000)
+      } else { throw new Error() }
     } catch {
       setSendError(true)
-      setTimeout(() => setSendError(false), 4000)
+      setTimeout(() => setSendError(false), 5000)
     } finally {
       setSending(false)
     }
@@ -780,23 +801,29 @@ export default function App() {
                   <span>✦</span> Message envoyé — je vous réponds rapidement.
                 </div>
               ) : (
-                <form className="contact-form reveal" onSubmit={handleSubmit}>
+                <form className="contact-form reveal" onSubmit={handleSubmit} noValidate>
                   <div className="form-row">
-                    <div className="form-field form-field--float">
-                      <input id="name" type="text" required placeholder=" "
-                        value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} />
-                      <label htmlFor="name">Nom</label>
+                    <div className={`form-field form-field--float ${formErrors.name ? 'form-field--error' : ''}`}>
+                      <input id="name" type="text" placeholder=" "
+                        value={formData.name}
+                        onChange={e => { setFormData({ ...formData, name: e.target.value }); setFormErrors(p => ({ ...p, name: '' })) }} />
+                      <label htmlFor="name">Nom complet</label>
+                      {formErrors.name && <span className="field-error">{formErrors.name}</span>}
                     </div>
-                    <div className="form-field form-field--float">
-                      <input id="email" type="email" required placeholder=" "
-                        value={formData.email} onChange={e => setFormData({ ...formData, email: e.target.value })} />
-                      <label htmlFor="email">Email</label>
+                    <div className={`form-field form-field--float ${formErrors.email ? 'form-field--error' : ''}`}>
+                      <input id="email" type="email" placeholder=" "
+                        value={formData.email}
+                        onChange={e => { setFormData({ ...formData, email: e.target.value }); setFormErrors(p => ({ ...p, email: '' })) }} />
+                      <label htmlFor="email">Adresse email</label>
+                      {formErrors.email && <span className="field-error">{formErrors.email}</span>}
                     </div>
                   </div>
-                  <div className="form-field form-field--float form-field--textarea">
-                    <textarea id="message" required rows={5} placeholder=" "
-                      value={formData.message} onChange={e => setFormData({ ...formData, message: e.target.value })} />
-                    <label htmlFor="message">Message</label>
+                  <div className={`form-field form-field--float form-field--textarea ${formErrors.message ? 'form-field--error' : ''}`}>
+                    <textarea id="message" rows={5} placeholder=" "
+                      value={formData.message}
+                      onChange={e => { setFormData({ ...formData, message: e.target.value }); setFormErrors(p => ({ ...p, message: '' })) }} />
+                    <label htmlFor="message">Ton message</label>
+                    {formErrors.message && <span className="field-error">{formErrors.message}</span>}
                   </div>
                   {sendError && (
                     <div className="form-error">
