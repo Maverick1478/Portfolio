@@ -9,7 +9,7 @@ export default defineConfig({
     sourcemap: false,
     rollupOptions: {
       output: {
-        manualChunks: { vendor: ['react', 'react-dom'] },
+        manualChunks: id => id.includes('node_modules') ? 'vendor' : undefined,
       },
     },
   },
