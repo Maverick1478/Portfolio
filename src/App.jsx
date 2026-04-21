@@ -708,7 +708,7 @@ export default function App() {
                           </div>
                           <a href={p.link} className="project-arrow" aria-label="voir le projet">↗</a>
                         </div>
-                        <ScrambleTitle text={p.title} className="project-title" />
+                        <h3 className="project-title">{p.title}</h3>
                         <p className="project-desc">{p.description}</p>
                         {/* Metadata row */}
                         <div className="project-meta">
