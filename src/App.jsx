@@ -45,7 +45,7 @@ const SERVICES = [
 
 const PROJECTS = [
   {
-    id: 1, title: 'Biblly', year: '2024', link: 'https://biblly.vercel.app', placeholder: false,
+    id: 1, title: 'Biblly', year: '2024', link: 'https://www.biblly.fr/home', placeholder: false,
     category: 'Bibliothèque sociale',
     role: 'Full-Stack',
     status: 'Livré',
