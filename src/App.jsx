@@ -695,7 +695,7 @@ export default function App() {
             <div className="hero-marquee">
               <div className="hero-marquee-track">
                 {[...MARQUEE_ITEMS, ...MARQUEE_ITEMS].map((item, i) => (
-                  <span key={i} className={item === '◆' ? 'mq-sep' : 'mq-item'}>{item}</span>
+                  <span key={i} className={item === '◆' ? 'mq-sep' : 'mq-item'} {...(item !== '◆' ? { 'data-tech': item } : {})}>{item}</span>
                 ))}
               </div>
             </div>
