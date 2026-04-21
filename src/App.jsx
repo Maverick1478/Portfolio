@@ -33,24 +33,24 @@ const MARQUEE_ITEMS = [
 const SERVICES = [
   {
     id: 1, num: '01', icon: '◈', title: 'Site Vitrine',
-    description: "Un site élégant qui présente votre activité, vos services et vous met en valeur. Idéal pour les artisans, restaurateurs et professionnels indépendants.",
+    description: "Design élégant sur mesure pour artisans, restaurateurs et indépendants.",
     features: ['Design sur mesure', 'Responsive mobile', 'SEO optimisé', 'Formulaire de contact'],
   },
   {
     id: 2, num: '02', icon: '◉', title: 'Refonte de Site',
-    description: "Votre site est daté ou ne vous ressemble plus ? Je le modernise avec un design actuel et une meilleure expérience utilisateur.",
+    description: "Modernisation complète — design actuel, performance optimisée, meilleure UX.",
     features: ["Audit de l'existant", 'Nouveau design', 'Migration du contenu', 'Optimisation performance'],
   },
 ]
 
 const PROJECTS = [
   {
-    id: 1, title: '3SupContent', year: '2024', link: '#', placeholder: false,
-    category: 'Plateforme Web',
+    id: 1, title: 'Biblly', year: '2024', link: 'https://biblly.vercel.app', placeholder: false,
+    category: 'Bibliothèque sociale',
     role: 'Full-Stack',
     status: 'Livré',
     team: '4 pers.',
-    description: "Plateforme de gestion de contenu développée en équipe à Supinfo 3A. Gestion des articles, rôles utilisateurs et interface d'administration.",
+    description: "Réseau social autour de la lecture — suivez vos amis, partagez vos lectures et découvrez de nouveaux livres.",
     tags: ['React', 'Node.js', 'PostgreSQL'],
   },
   { id: 2, placeholder: true },
@@ -60,22 +60,22 @@ const PROJECTS = [
 const EXPERTISE = [
   {
     num: '01', title: 'Frontend',
-    description: 'Interfaces modernes, responsives et accessibles conçues pour une expérience utilisateur irréprochable.',
+    description: 'Interfaces modernes, responsives et accessibles.',
     items: ['React', 'Next.js', 'TypeScript', 'HTML / CSS', 'Tailwind CSS'],
   },
   {
     num: '02', title: 'Backend',
-    description: 'APIs robustes et bases de données adaptées à chaque projet, du prototype à la production.',
+    description: 'APIs robustes et bases de données, du prototype à la production.',
     items: ['Node.js', 'Express', 'PostgreSQL', 'MongoDB', 'REST API'],
   },
   {
     num: '03', title: 'Design & UX',
-    description: 'Prototypage et conception d\'interfaces pensées pour l\'utilisateur, du wireframe au pixel-perfect.',
+    description: 'Du wireframe au pixel-perfect, centré sur l\'utilisateur.',
     items: ['Figma', 'Responsive Design', 'Animations CSS', 'Accessibilité'],
   },
   {
     num: '04', title: 'Outils & Deploy',
-    description: 'Workflow moderne pour un développement efficace, des tests solides et un déploiement serein.',
+    description: 'Workflow moderne pour un déploiement rapide et serein.',
     items: ['Git', 'Docker', 'Vercel', 'VS Code', 'CI/CD'],
   },
 ]
@@ -583,27 +583,32 @@ export default function App() {
 
               {/* ── Right — info sidebar ── */}
               <aside className={`hero-aside ${loaded ? 'hero-aside--in' : ''}`}>
-                <div className="ha-block">
-                  <span className="ha-label">Statut</span>
-                  <span className="ha-value ha-value--avail">● Disponible</span>
+                {/* Statut */}
+                <div className="ha-status">
+                  <span className="ha-status-dot" />
+                  <span className="ha-status-text">Disponible</span>
                 </div>
                 <div className="ha-sep" />
-                <div className="ha-block">
-                  <span className="ha-label">Localisation</span>
-                  <span className="ha-value">Paris, France</span>
-                  <span className="ha-mono">48°51′N · 2°21′E</span>
+                {/* Localisation */}
+                <div className="ha-geo">
+                  <span className="ha-geo-city">Paris</span>
+                  <span className="ha-geo-line">France · 48°51′N</span>
                 </div>
                 <div className="ha-sep" />
-                <div className="ha-block">
-                  <span className="ha-label">Formation</span>
-                  <span className="ha-value">Supinfo — 3ème année</span>
-                  <span className="ha-mono">Ingénierie logicielle</span>
+                {/* Stack */}
+                <div className="ha-stack">
+                  <span className="ha-stack-label">Stack</span>
+                  <div className="ha-stack-tags">
+                    {['React', 'Node.js', 'TypeScript', 'PostgreSQL', 'Next.js'].map(t => (
+                      <span key={t} className="ha-tag">{t}</span>
+                    ))}
+                  </div>
                 </div>
                 <div className="ha-sep" />
-                <div className="ha-block">
-                  <span className="ha-label">Services</span>
-                  <span className="ha-value">Sites vitrines</span>
-                  <span className="ha-value">Refontes web</span>
+                {/* Année */}
+                <div className="ha-year-block">
+                  <span className="ha-year-num">2025</span>
+                  <span className="ha-year-label">Supinfo · 3A</span>
                 </div>
               </aside>
 
