@@ -119,14 +119,14 @@ body {
   overflow: hidden;
 }
 
-/* ── Phase 2 : fondu de sortie simple ────────────────────────────────────── */
+/* ── Phase 2 : rideau qui monte ──────────────────────────────────────────── */
 .loader--exit {
-  animation: loaderFade 0.9s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation: loaderCurtain 0.8s cubic-bezier(0.76, 0, 0.24, 1) 0.2s forwards;
   pointer-events: none;
 }
-@keyframes loaderFade {
-  0%   { opacity: 1; }
-  100% { opacity: 0; }
+@keyframes loaderCurtain {
+  0%   { transform: translateY(0); }
+  100% { transform: translateY(-100%); }
 }
 
 /* Ambient glows */
@@ -203,9 +203,9 @@ body {
   align-items: center; gap: 2rem;
   position: relative; z-index: 1;
   width: min(90vw, 480px);
-  transition: opacity 0.55s cubic-bezier(0.4, 0, 1, 1);
+  transition: opacity 0.3s ease, transform 0.35s cubic-bezier(0.4, 0, 1, 1);
 }
-.ldr-content--out { opacity: 0; }
+.ldr-content--out { opacity: 0; transform: translateY(-16px) scale(0.97); }
 
 /* ── Ring group ──────────────────────────────────────────────────────────── */
 .ldr-rings {

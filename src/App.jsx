@@ -337,7 +337,7 @@ function LoadingScreen({ onComplete }) {
 
   useEffect(() => {
     const t0 = setTimeout(() => setNameIn(true), 200)
-    const DURATION = 2400
+    const DURATION = 2000
     let startTs = null
     let rafId
 
@@ -354,8 +354,8 @@ function LoadingScreen({ onComplete }) {
     }
 
     rafId = requestAnimationFrame(tick)
-    const tFade = setTimeout(() => { setFadeOut(true); setExitAnim(true); onComplete() }, 2600)
-    const tGone = setTimeout(() => setGone(true), 3700)
+    const tFade = setTimeout(() => { setFadeOut(true); setExitAnim(true); onComplete() }, 2200)
+    const tGone = setTimeout(() => setGone(true), 3300)
     return () => {
       clearTimeout(t0); cancelAnimationFrame(rafId)
       clearTimeout(tFade); clearTimeout(tGone)
