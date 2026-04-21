@@ -598,12 +598,6 @@ export default function App() {
 
               {/* ── Left — main content ── */}
               <div className="hero-content">
-                <div className={`hero-meta ${loaded ? 'hero-meta--in' : ''}`}>
-                  <span className="hero-meta-item">Développeur Web</span>
-                  <span className="hero-meta-sep">·</span>
-                  <span className="hero-meta-item">Supinfo 3A</span>
-                </div>
-
                 <h1 className="hero-name" aria-label="Andrea Coustenoble">
                   <span className="hero-name-line">
                     <SplitText text="Andrea" animate={loaded} delay={0.1} className="hn-first" />
@@ -635,7 +629,6 @@ export default function App() {
                 <div className={`hero-socials ${loaded ? 'hero-socials--in' : ''}`}>
                   <a href="https://github.com" target="_blank" rel="noreferrer" className="social-link">GitHub ↗</a>
                   <a href="https://linkedin.com" target="_blank" rel="noreferrer" className="social-link">LinkedIn ↗</a>
-                  <a href="mailto:andrea.coustenoble@email.com" className="social-link">Email ↗</a>
                 </div>
               </div>
 
@@ -755,7 +748,6 @@ export default function App() {
                           <a href={p.link} className="project-arrow" aria-label="voir le projet">↗</a>
                         </div>
                         <h3 className="project-title">{p.title}</h3>
-                        <p className="project-desc">{p.description}</p>
                         {/* Metadata row */}
                         <div className="project-meta">
                           <div className="project-meta-item">
@@ -844,7 +836,6 @@ export default function App() {
                         <h3 className="process-title">{step.title}</h3>
                         <span className="process-dur">{step.duration}</span>
                       </div>
-                      <p className="process-desc">{step.desc}</p>
                     </div>
                   </div>
                 ))}
