@@ -354,7 +354,7 @@ function LoadingScreen({ onComplete }) {
     }
 
     rafId = requestAnimationFrame(tick)
-    const tFade = setTimeout(() => { setFadeOut(true); setExitAnim(true); onComplete() }, 2200)
+    const tFade = setTimeout(() => { setExitAnim(true); onComplete() }, 2200)
     const tGone = setTimeout(() => setGone(true), 3300)
     return () => {
       clearTimeout(t0); cancelAnimationFrame(rafId)

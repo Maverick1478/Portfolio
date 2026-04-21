@@ -119,14 +119,14 @@ body {
   overflow: hidden;
 }
 
-/* ── Phase 2 : rideau qui monte ──────────────────────────────────────────── */
+/* ── Phase 2 : rideau qui monte d'un bloc ────────────────────────────────── */
 .loader--exit {
-  animation: loaderCurtain 0.8s cubic-bezier(0.76, 0, 0.24, 1) 0.2s forwards;
+  animation: loaderCurtain 0.9s cubic-bezier(0.87, 0, 0.13, 1) forwards;
   pointer-events: none;
 }
 @keyframes loaderCurtain {
   0%   { transform: translateY(0); }
-  100% { transform: translateY(-100%); }
+  100% { transform: translateY(-105%); }
 }
 
 /* Ambient glows */
