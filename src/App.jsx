@@ -392,17 +392,11 @@ export default function App() {
   const [sent,         setSent]        = useState(false)
   const [sending,      setSending]     = useState(false)
   const [sendError,    setSendError]   = useState(false)
-  const [settled,      setSettled]     = useState(false)
   const roleText = useTypewriter(ROLES)
   useScrollReveal()
 
   const handleLoaded = useCallback(() => setLoaded(true), [])
 
-  useEffect(() => {
-    if (!loaded) return
-    const t = setTimeout(() => setSettled(true), 1300)
-    return () => clearTimeout(t)
-  }, [loaded])
 
   useEffect(() => {
     const onScroll = () => {
@@ -488,7 +482,7 @@ export default function App() {
       {!loaded && <LoadingScreen onComplete={handleLoaded} />}
       <Grain />
 
-      <div className={`app${loaded ? ' app--loaded' : ''}${settled ? ' app--settled' : ''}`}>
+      <div className={`app${loaded ? ' app--loaded' : ''}`}>
 
         <div className="scroll-progress" style={{ width: `${scrollPct}%` }} />
 
