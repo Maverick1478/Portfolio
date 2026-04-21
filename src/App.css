@@ -72,21 +72,21 @@ body {
 ::-webkit-scrollbar-thumb { background: var(--green); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--green-l); }
 
-/* ── App entrance : scale + blur + opacity ──────────────────────────────── */
+/* ── App entrance : iris open (clip-path only — GPU-composited, zero repaints) */
 .app {
   min-height: 100vh;
-  opacity: 0;
-  transform: scale(0.97) translateY(10px);
-  filter: blur(14px);
-  transition:
-    opacity  1.25s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 1.35s cubic-bezier(0.22, 1, 0.36, 1),
-    filter   1.0s  cubic-bezier(0.22, 1, 0.36, 1);
+  clip-path: circle(0% at 50% 48%);
+  will-change: clip-path;
+  transition: clip-path 0.95s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .app--loaded {
-  opacity: 1;
-  transform: scale(1) translateY(0);
-  filter: blur(0);
+  clip-path: circle(150% at 50% 48%);
+}
+/* After iris fully open: release GPU layer, remove clip-path restriction */
+.app--settled {
+  clip-path: none;
+  will-change: auto;
+  transition: none;
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -106,9 +106,9 @@ body {
   overflow: hidden;
 }
 
-/* ── Phase 2 : iris close (cercle qui se rétracte vers le centre) ─────────── */
+/* ── Phase 2 : iris close — rétraction rapide vers le centre ─────────────── */
 .loader--exit {
-  animation: loaderIris 0.82s cubic-bezier(0.86, 0, 0.07, 1) forwards;
+  animation: loaderIris 0.6s cubic-bezier(0.76, 0, 0.24, 1) forwards;
   pointer-events: none;
 }
 @keyframes loaderIris {

@@ -303,15 +303,17 @@ function LoadingScreen({ onComplete }) {
     }
 
     rafId = requestAnimationFrame(tick)
-    // Phase 1 : le contenu du loader fond (fade + scale down)
-    const tFade = setTimeout(() => setFadeOut(true), 2600)
-    // Phase 2 : iris close + la page commence à apparaître en dessous
-    const tExit = setTimeout(() => { setExitAnim(true); onComplete() }, 2900)
-    // Phase 3 : loader retiré du flux DOM
-    const tGone = setTimeout(() => setGone(true), 3780)
+    // Phase 1 : contenu fond
+    const tFade   = setTimeout(() => setFadeOut(true),   2500)
+    // Phase 2 : iris se FERME (0.6s → terminée à ~3350ms)
+    const tExit   = setTimeout(() => setExitAnim(true),  2750)
+    // Phase 3 : page iris s'OUVRE (350ms après le début de fermeture = croisement cinéma)
+    const tReveal = setTimeout(() => onComplete(),        3100)
+    // Phase 4 : loader retiré du DOM
+    const tGone   = setTimeout(() => setGone(true),       4000)
     return () => {
       clearTimeout(t0); cancelAnimationFrame(rafId)
-      clearTimeout(tFade); clearTimeout(tExit); clearTimeout(tGone)
+      clearTimeout(tFade); clearTimeout(tExit); clearTimeout(tReveal); clearTimeout(tGone)
     }
   }, [onComplete])
 
@@ -396,10 +398,17 @@ export default function App() {
   const [sent,         setSent]        = useState(false)
   const [sending,      setSending]     = useState(false)
   const [sendError,    setSendError]   = useState(false)
+  const [settled,      setSettled]     = useState(false)
   const roleText = useTypewriter(ROLES)
   useScrollReveal()
 
   const handleLoaded = useCallback(() => setLoaded(true), [])
+
+  useEffect(() => {
+    if (!loaded) return
+    const t = setTimeout(() => setSettled(true), 1400)
+    return () => clearTimeout(t)
+  }, [loaded])
 
   useEffect(() => {
     const onScroll = () => {
@@ -474,7 +483,7 @@ export default function App() {
       {!loaded && <LoadingScreen onComplete={handleLoaded} />}
       <Grain />
 
-      <div className={`app ${loaded ? 'app--loaded' : ''}`}>
+      <div className={`app${loaded ? ' app--loaded' : ''}${settled ? ' app--settled' : ''}`}>
 
         <div className="scroll-progress" style={{ width: `${scrollPct}%` }} />
 
