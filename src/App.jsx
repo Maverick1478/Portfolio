@@ -109,31 +109,6 @@ function useTypewriter(words, speed = 80, pause = 2200) {
   return display
 }
 
-function useLerpScroll() {
-  useEffect(() => {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
-    if ('ontouchstart' in window) return
-    let target = window.scrollY
-    let current = window.scrollY
-    let rafId = null
-    let running = false
-    const maxScroll = () => document.documentElement.scrollHeight - window.innerHeight
-    const tick = () => {
-      const d = target - current
-      if (Math.abs(d) < 0.5) { current = target; running = false; return }
-      current += d * 0.13
-      window.scrollTo(0, current)
-      rafId = requestAnimationFrame(tick)
-    }
-    const onWheel = e => {
-      e.preventDefault()
-      target = Math.min(Math.max(target + e.deltaY, 0), maxScroll())
-      if (!running) { running = true; rafId = requestAnimationFrame(tick) }
-    }
-    window.addEventListener('wheel', onWheel, { passive: false })
-    return () => { window.removeEventListener('wheel', onWheel); if (rafId) cancelAnimationFrame(rafId) }
-  }, [])
-}
 
 function useScrollReveal() {
   useEffect(() => {
@@ -470,7 +445,6 @@ export default function App() {
   const [sendError,    setSendError]   = useState(false)
   const roleText = useTypewriter(ROLES)
   useScrollReveal()
-  useLerpScroll()
 
   const handleLoaded = useCallback(() => setLoaded(true), [])
 
