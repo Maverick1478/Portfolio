@@ -45,17 +45,14 @@ const SERVICES = [
 
 const PROJECTS = [
   {
-    id: 1, title: 'Biblly', year: '2024', link: 'https://www.biblly.fr/home', placeholder: false,
+    id: 1, title: 'Biblly', year: '2024', link: 'https://www.biblly.fr/home',
     category: 'Bibliothèque sociale',
     role: 'Full-Stack',
     status: 'Livré',
-    team: '4 pers.',
     description: "Réseau social autour de la lecture — suivez vos amis, partagez vos lectures et découvrez de nouveaux livres.",
     tags: ['React', 'Node.js', 'PostgreSQL'],
     image: '/projects/biblly.png',
   },
-  { id: 2, placeholder: true },
-  { id: 3, placeholder: true },
 ]
 
 const EXPERTISE = [
@@ -707,46 +704,33 @@ export default function App() {
               </div>
               <div className="projects-grid">
                 {PROJECTS.map((p, i) => (
-                  p.placeholder
-                    ? (
-                      <div key={p.id} className="project-card project-card--empty reveal" style={{ '--delay': `${i * 0.1}s` }}>
-                        <span className="empty-plus">+</span>
-                        <p>Projet à venir</p>
+                  <div key={p.id} className="project-card reveal" style={{ '--delay': `${i * 0.1}s` }}>
+                    <div className="project-thumb">
+                      <img src={p.image} alt={p.title} loading="lazy" />
+                    </div>
+                    {/* Static footer — always visible */}
+                    <div className="project-footer">
+                      <div className="project-footer-left">
+                        <span className="project-cat">{p.category}</span>
+                        <h3 className="project-title">{p.title}</h3>
                       </div>
-                    ) : (
-                      <TiltCard key={p.id} className="project-card project-card--featured reveal" style={{ '--delay': `${i * 0.1}s` }}>
-                        {/* Image */}
-                        <div className="project-thumb">
-                          <img src={p.image} alt={p.title} loading="lazy" />
+                      <span className="project-year">{p.year}</span>
+                    </div>
+                    {/* Hover overlay */}
+                    <div className="project-overlay">
+                      <div className="project-overlay-inner">
+                        <span className="project-cat">{p.category}</span>
+                        <h3 className="project-overlay-title">{p.title}</h3>
+                        <p className="project-overlay-desc">{p.description}</p>
+                        <div className="project-tags">
+                          {p.tags.map(tag => <span key={tag} className="tag">{tag}</span>)}
                         </div>
-                        {/* Content */}
-                        <div className="project-body">
-                          <div className="project-top">
-                            <div className="project-ids">
-                              <span className="project-cat">{p.category}</span>
-                              <span className="project-num">Nº {String(p.id).padStart(3, '0')} · {p.year}</span>
-                            </div>
-                            <a href={p.link} className="project-arrow" aria-label="voir le projet" target="_blank" rel="noreferrer">↗</a>
-                          </div>
-                          <h3 className="project-title">{p.title}</h3>
-                          <p className="project-desc">{p.description}</p>
-                          <div className="project-tags">
-                            {p.tags.map(tag => <span key={tag} className="tag">{tag}</span>)}
-                          </div>
-                          <div className="project-meta">
-                            <div className="project-meta-item">
-                              <span className="meta-label">Rôle</span>
-                              <span className="meta-value">{p.role}</span>
-                            </div>
-                            <div className="project-meta-item">
-                              <span className="meta-label">Statut</span>
-                              <span className="meta-value">{p.status}</span>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="project-line" />
-                      </TiltCard>
-                    )
+                        <a href={p.link} className="project-overlay-cta" target="_blank" rel="noreferrer">
+                          Voir le projet <span>↗</span>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
                 ))}
               </div>
             </div>
