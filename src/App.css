@@ -602,9 +602,51 @@ body {
 
 .hero-container {
   position: relative; z-index: 1; flex: 1;
-  display: flex; flex-direction: column; justify-content: center;
-  max-width: 860px; margin: 0 auto; padding: 0 2rem;
+  display: grid; grid-template-columns: 1fr 280px; gap: 4rem; align-items: center;
+  max-width: var(--max-w); margin: 0 auto; padding: 0 2rem;
   padding-top: calc(var(--nav-h) + 4rem); padding-bottom: 4rem;
+}
+
+/* ── Hero aside — info sidebar ──────────────────────────────────────────── */
+.hero-aside {
+  display: flex; flex-direction: column;
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  background: var(--bg-card);
+  backdrop-filter: blur(10px);
+  box-shadow: var(--sh);
+  overflow: hidden;
+  opacity: 0; transform: translateX(20px);
+  transition: opacity 0.7s ease 1.2s, transform 0.7s cubic-bezier(0.22,1,0.36,1) 1.2s;
+}
+.hero-aside--in { opacity: 1; transform: translateX(0); }
+
+.ha-block {
+  display: flex; flex-direction: column; gap: 4px;
+  padding: 1.25rem 1.5rem;
+}
+.ha-sep {
+  height: 1px;
+  background: var(--border);
+  flex-shrink: 0;
+}
+.ha-label {
+  font-family: var(--fm);
+  font-size: 9px; font-weight: 400;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--faint);
+}
+.ha-value {
+  font-family: var(--fu);
+  font-size: 13px; font-weight: 600;
+  color: var(--text); letter-spacing: 0.01em;
+}
+.ha-value--avail { color: var(--green); }
+.ha-mono {
+  font-family: var(--fm);
+  font-size: 10px; font-weight: 400;
+  color: var(--muted); letter-spacing: 0.03em;
+  margin-top: 1px;
 }
 
 /* Hero technical meta row (coordinates + availability) */
@@ -1056,7 +1098,7 @@ body {
    RESPONSIVE — TABLET 960px
 ═══════════════════════════════════════════════════════════════════════════ */
 @media (max-width: 960px) {
-  .hero-container { max-width: 680px; }
+  .hero-container { grid-template-columns: 1fr 230px; gap: 2.5rem; }
   .services-grid  { grid-template-columns: 1fr 1fr; gap: 1.5rem; }
   .projects-grid  { grid-template-columns: 1fr 1fr; }
   .expertise-grid { grid-template-columns: 1fr 1fr; }
@@ -1172,10 +1214,12 @@ body {
   /* ── Hero ──────────────────────────────────────────────────────────────── */
   .section--hero { min-height: 100dvh; }
   .hero-container {
-    max-width: 100%;
+    grid-template-columns: 1fr;
+    gap: 2rem;
     padding-top: calc(var(--nav-h) + 2rem);
     padding-bottom: 1.5rem;
   }
+  .hero-aside { display: none; }
 
   /* Avatar mobile */
   .hero-mob-av {

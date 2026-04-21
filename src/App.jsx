@@ -525,14 +525,13 @@ export default function App() {
             <StarField count={22} />
 
             <div className="container hero-container">
+
+              {/* ── Left — main content ── */}
               <div className="hero-content">
-                {/* Technical data row — Becquet-style */}
                 <div className={`hero-meta ${loaded ? 'hero-meta--in' : ''}`}>
-                  <span className="hero-meta-item">48°51′N, 2°21′E</span>
+                  <span className="hero-meta-item">Développeur Web</span>
                   <span className="hero-meta-sep">·</span>
-                  <span className="hero-meta-item">Paris, France</span>
-                  <span className="hero-meta-sep">·</span>
-                  <span className="hero-meta-item hero-meta-avail">● Disponible</span>
+                  <span className="hero-meta-item">Supinfo 3A</span>
                 </div>
 
                 <h1 className="hero-name" aria-label="Andrea Coustenoble">
@@ -558,15 +557,6 @@ export default function App() {
                   />
                 </p>
 
-                {/* Stat badges */}
-                <div className={`hero-stats ${loaded ? 'hero-stats--in' : ''}`}>
-                  <span className="hero-stat"><span>3A</span> Supinfo</span>
-                  <span className="stat-sep">·</span>
-                  <span className="hero-stat"><span>2</span> Services</span>
-                  <span className="stat-sep">·</span>
-                  <span className="hero-stat"><span>✓</span> Disponible</span>
-                </div>
-
                 <div className={`hero-actions ${loaded ? 'hero-actions--in' : ''}`}>
                   <MagBtn className="btn btn--primary" onClick={() => scrollTo('projects')}>Voir mes projets</MagBtn>
                   <MagBtn className="btn btn--ghost" onClick={() => scrollTo('contact')}>Me contacter ↗</MagBtn>
@@ -579,6 +569,32 @@ export default function App() {
                   <a href="mailto:andrea.coustenoble@email.com" className="social-link">Email ↗</a>
                 </div>
               </div>
+
+              {/* ── Right — info sidebar ── */}
+              <aside className={`hero-aside ${loaded ? 'hero-aside--in' : ''}`}>
+                <div className="ha-block">
+                  <span className="ha-label">Statut</span>
+                  <span className="ha-value ha-value--avail">● Disponible</span>
+                </div>
+                <div className="ha-sep" />
+                <div className="ha-block">
+                  <span className="ha-label">Localisation</span>
+                  <span className="ha-value">Paris, France</span>
+                  <span className="ha-mono">48°51′N · 2°21′E</span>
+                </div>
+                <div className="ha-sep" />
+                <div className="ha-block">
+                  <span className="ha-label">Formation</span>
+                  <span className="ha-value">Supinfo — 3ème année</span>
+                  <span className="ha-mono">Ingénierie logicielle</span>
+                </div>
+                <div className="ha-sep" />
+                <div className="ha-block">
+                  <span className="ha-label">Services</span>
+                  <span className="ha-value">Sites vitrines</span>
+                  <span className="ha-value">Refontes web</span>
+                </div>
+              </aside>
 
             </div>
 
