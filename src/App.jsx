@@ -281,7 +281,8 @@ function LoadingScreen({ onComplete }) {
   const [status,   setStatus]   = useState('Initialisation...')
   const [nameIn,   setNameIn]   = useState(false)
   const [fadeOut,  setFadeOut]  = useState(false)
-  const [slideUp,  setSlideUp]  = useState(false)
+  const [exitAnim, setExitAnim] = useState(false)
+  const [gone,     setGone]     = useState(false)
 
   useEffect(() => {
     const t0 = setTimeout(() => setNameIn(true), 200)
@@ -302,13 +303,22 @@ function LoadingScreen({ onComplete }) {
     }
 
     rafId = requestAnimationFrame(tick)
-    const tFade  = setTimeout(() => setFadeOut(true), 2850)
-    const tSlide = setTimeout(() => { setSlideUp(true); onComplete() }, 3220)
-    return () => { clearTimeout(t0); cancelAnimationFrame(rafId); clearTimeout(tFade); clearTimeout(tSlide) }
+    // Phase 1 : le contenu du loader fond (fade + scale down)
+    const tFade = setTimeout(() => setFadeOut(true), 2600)
+    // Phase 2 : iris close + la page commence à apparaître en dessous
+    const tExit = setTimeout(() => { setExitAnim(true); onComplete() }, 2900)
+    // Phase 3 : loader retiré du flux DOM
+    const tGone = setTimeout(() => setGone(true), 3780)
+    return () => {
+      clearTimeout(t0); cancelAnimationFrame(rafId)
+      clearTimeout(tFade); clearTimeout(tExit); clearTimeout(tGone)
+    }
   }, [onComplete])
 
+  if (gone) return null
+
   return (
-    <div className={`loader ${slideUp ? 'loader--up' : ''}`}>
+    <div className={`loader ${exitAnim ? 'loader--exit' : ''}`}>
       <div className="ldr-glow ldr-glow--1" />
       <div className="ldr-glow ldr-glow--2" />
       <div className="ldr-orn ldr-orn--tl"><span /><span /></div>
@@ -505,6 +515,7 @@ export default function App() {
 
           {/* ── HERO ── */}
           <section id="about" className="section section--hero">
+            <div className="hero-scan" aria-hidden="true" />
             <ParticleCanvas />
             <div className="aurora aurora--1" />
             <div className="aurora aurora--2" />

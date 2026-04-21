@@ -72,8 +72,22 @@ body {
 ::-webkit-scrollbar-thumb { background: var(--green); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--green-l); }
 
-.app { min-height: 100vh; opacity: 0; transition: opacity 0.55s ease; }
-.app--loaded { opacity: 1; }
+/* ── App entrance : scale + blur + opacity ──────────────────────────────── */
+.app {
+  min-height: 100vh;
+  opacity: 0;
+  transform: scale(0.97) translateY(10px);
+  filter: blur(14px);
+  transition:
+    opacity  1.25s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 1.35s cubic-bezier(0.22, 1, 0.36, 1),
+    filter   1.0s  cubic-bezier(0.22, 1, 0.36, 1);
+}
+.app--loaded {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+  filter: blur(0);
+}
 
 /* ═══════════════════════════════════════════════════════════════════════════
    LOADING SCREEN
@@ -90,9 +104,52 @@ body {
   display: flex; flex-direction: column;
   align-items: center; justify-content: center;
   overflow: hidden;
-  transition: transform 0.8s cubic-bezier(0.76, 0, 0.24, 1);
 }
-.loader--up { transform: translateY(-100%); }
+
+/* ── Phase 2 : iris close (cercle qui se rétracte vers le centre) ─────────── */
+.loader--exit {
+  animation: loaderIris 0.82s cubic-bezier(0.86, 0, 0.07, 1) forwards;
+  pointer-events: none;
+}
+@keyframes loaderIris {
+  0%   { clip-path: circle(120% at 50% 48%); }
+  100% { clip-path: circle(0%   at 50% 48%); }
+}
+
+/* Anneaux s'écartent en explosant vers l'extérieur */
+.loader--exit .ldr-rings {
+  animation: ringsExit 0.55s cubic-bezier(0.55, 0, 1, 0.45) forwards;
+}
+@keyframes ringsExit {
+  0%   { transform: scale(1)   rotate(0deg);   opacity: 1; }
+  40%  { transform: scale(1.6) rotate(12deg);  opacity: 0.6; }
+  100% { transform: scale(4)   rotate(28deg);  opacity: 0; }
+}
+
+/* AC grossit et disparaît */
+.loader--exit .ldr-ac {
+  animation: acExit 0.42s ease-in forwards;
+}
+@keyframes acExit {
+  0%   { transform: scale(1);  opacity: 1; letter-spacing: 0.08em; }
+  100% { transform: scale(7);  opacity: 0; letter-spacing: 0.5em; }
+}
+
+/* Ornements de coin s'écartent vers les coins */
+.loader--exit .ldr-orn--tl { animation: ornTL 0.38s ease-in forwards; }
+.loader--exit .ldr-orn--tr { animation: ornTR 0.38s ease-in forwards; }
+.loader--exit .ldr-orn--bl { animation: ornBL 0.38s ease-in forwards; }
+.loader--exit .ldr-orn--br { animation: ornBR 0.38s ease-in forwards; }
+@keyframes ornTL { to { transform: translate(-60px, -60px); opacity: 0; } }
+@keyframes ornTR { to { transform: translate( 60px, -60px); opacity: 0; } }
+@keyframes ornBL { to { transform: translate(-60px,  60px); opacity: 0; } }
+@keyframes ornBR { to { transform: translate( 60px,  60px); opacity: 0; } }
+
+/* Labels latéraux glissent vers l'extérieur */
+.loader--exit .ldr-side-label--l { animation: labelLeft  0.35s ease-in forwards; }
+.loader--exit .ldr-side-label--r { animation: labelRight 0.35s ease-in forwards; }
+@keyframes labelLeft  { to { opacity: 0; transform: translateY(-50%) rotate(-90deg) translateX(-80px) translateX(-50%); } }
+@keyframes labelRight { to { opacity: 0; transform: translateY(-50%) rotate( 90deg) translateX(-80px) translateX( 50%); } }
 
 /* Ambient glows */
 .ldr-glow {
@@ -591,6 +648,29 @@ body {
 /* ═══════════════════════════════════════════════════════════════════════════
    HERO
 ═══════════════════════════════════════════════════════════════════════════ */
+/* ── Scan de lumière qui traverse le hero à l'entrée ────────────────────── */
+.hero-scan {
+  position: absolute; top: 0; bottom: 0;
+  left: -80%; width: 55%;
+  background: linear-gradient(
+    105deg,
+    transparent   0%,
+    rgba(250,247,242,0.03) 35%,
+    rgba(250,247,242,0.10) 50%,
+    rgba(250,247,242,0.03) 65%,
+    transparent   100%
+  );
+  transform: skewX(-10deg);
+  pointer-events: none; z-index: 2;
+}
+.app--loaded .hero-scan {
+  animation: heroScan 1.5s cubic-bezier(0.22, 1, 0.36, 1) 0.4s forwards;
+}
+@keyframes heroScan {
+  from { left: -80%; }
+  to   { left: 170%; }
+}
+
 .particle-canvas { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; z-index:0; }
 
 .hero-glow { position:absolute; border-radius:50%; pointer-events:none; z-index:0; filter:blur(50px); }
