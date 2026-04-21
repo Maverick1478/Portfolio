@@ -77,12 +77,12 @@ body {
   min-height: 100vh;
   clip-path: circle(0% at 50% 48%);
   will-change: clip-path;
-  transition: clip-path 0.95s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: clip-path 1.15s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .app--loaded {
   clip-path: circle(150% at 50% 48%);
 }
-/* After iris fully open: release GPU layer, remove clip-path restriction */
+/* After iris fully open: release GPU layer */
 .app--settled {
   clip-path: none;
   will-change: auto;
@@ -106,50 +106,16 @@ body {
   overflow: hidden;
 }
 
-/* ── Phase 2 : iris close — rétraction rapide vers le centre ─────────────── */
+/* ── Phase 2 : iris close — organique, lent-rapide-lent ─────────────────── */
 .loader--exit {
-  animation: loaderIris 0.6s cubic-bezier(0.76, 0, 0.24, 1) forwards;
+  animation: loaderIris 0.78s cubic-bezier(0.65, 0, 0.35, 1) forwards;
   pointer-events: none;
 }
 @keyframes loaderIris {
   0%   { clip-path: circle(120% at 50% 48%); }
   100% { clip-path: circle(0%   at 50% 48%); }
 }
-
-/* Anneaux s'écartent en explosant vers l'extérieur */
-.loader--exit .ldr-rings {
-  animation: ringsExit 0.55s cubic-bezier(0.55, 0, 1, 0.45) forwards;
-}
-@keyframes ringsExit {
-  0%   { transform: scale(1)   rotate(0deg);   opacity: 1; }
-  40%  { transform: scale(1.6) rotate(12deg);  opacity: 0.6; }
-  100% { transform: scale(4)   rotate(28deg);  opacity: 0; }
-}
-
-/* AC grossit et disparaît */
-.loader--exit .ldr-ac {
-  animation: acExit 0.42s ease-in forwards;
-}
-@keyframes acExit {
-  0%   { transform: scale(1);  opacity: 1; letter-spacing: 0.08em; }
-  100% { transform: scale(7);  opacity: 0; letter-spacing: 0.5em; }
-}
-
-/* Ornements de coin s'écartent vers les coins */
-.loader--exit .ldr-orn--tl { animation: ornTL 0.38s ease-in forwards; }
-.loader--exit .ldr-orn--tr { animation: ornTR 0.38s ease-in forwards; }
-.loader--exit .ldr-orn--bl { animation: ornBL 0.38s ease-in forwards; }
-.loader--exit .ldr-orn--br { animation: ornBR 0.38s ease-in forwards; }
-@keyframes ornTL { to { transform: translate(-60px, -60px); opacity: 0; } }
-@keyframes ornTR { to { transform: translate( 60px, -60px); opacity: 0; } }
-@keyframes ornBL { to { transform: translate(-60px,  60px); opacity: 0; } }
-@keyframes ornBR { to { transform: translate( 60px,  60px); opacity: 0; } }
-
-/* Labels latéraux glissent vers l'extérieur */
-.loader--exit .ldr-side-label--l { animation: labelLeft  0.35s ease-in forwards; }
-.loader--exit .ldr-side-label--r { animation: labelRight 0.35s ease-in forwards; }
-@keyframes labelLeft  { to { opacity: 0; transform: translateY(-50%) rotate(-90deg) translateX(-80px) translateX(-50%); } }
-@keyframes labelRight { to { opacity: 0; transform: translateY(-50%) rotate( 90deg) translateX(-80px) translateX( 50%); } }
+/* Les éléments sous l'iris sont masqués — pas besoin d'animer séparément */
 
 /* Ambient glows */
 .ldr-glow {
@@ -225,9 +191,9 @@ body {
   align-items: center; gap: 2rem;
   position: relative; z-index: 1;
   width: min(90vw, 480px);
-  transition: opacity 0.38s ease, transform 0.38s ease;
+  transition: opacity 0.55s cubic-bezier(0.4, 0, 1, 1);
 }
-.ldr-content--out { opacity: 0; transform: scale(0.96); }
+.ldr-content--out { opacity: 0; }
 
 /* ── Ring group ──────────────────────────────────────────────────────────── */
 .ldr-rings {

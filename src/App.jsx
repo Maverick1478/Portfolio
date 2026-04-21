@@ -303,14 +303,14 @@ function LoadingScreen({ onComplete }) {
     }
 
     rafId = requestAnimationFrame(tick)
-    // Phase 1 : contenu fond
-    const tFade   = setTimeout(() => setFadeOut(true),   2500)
-    // Phase 2 : iris se FERME (0.6s → terminée à ~3350ms)
-    const tExit   = setTimeout(() => setExitAnim(true),  2750)
-    // Phase 3 : page iris s'OUVRE (350ms après le début de fermeture = croisement cinéma)
-    const tReveal = setTimeout(() => onComplete(),        3100)
+    // Phase 1 : contenu fond doucement (0.55s)
+    const tFade   = setTimeout(() => setFadeOut(true),   2450)
+    // Phase 2 : iris se FERME (0.78s → terminée à ~3680ms)
+    const tExit   = setTimeout(() => setExitAnim(true),  2900)
+    // Phase 3 : souffle de 50ms puis iris s'OUVRE (page révélée)
+    const tReveal = setTimeout(() => onComplete(),        3730)
     // Phase 4 : loader retiré du DOM
-    const tGone   = setTimeout(() => setGone(true),       4000)
+    const tGone   = setTimeout(() => setGone(true),       5000)
     return () => {
       clearTimeout(t0); cancelAnimationFrame(rafId)
       clearTimeout(tFade); clearTimeout(tExit); clearTimeout(tReveal); clearTimeout(tGone)
@@ -406,7 +406,7 @@ export default function App() {
 
   useEffect(() => {
     if (!loaded) return
-    const t = setTimeout(() => setSettled(true), 1400)
+    const t = setTimeout(() => setSettled(true), 1300)
     return () => clearTimeout(t)
   }, [loaded])
 
