@@ -52,6 +52,7 @@ const PROJECTS = [
     team: '4 pers.',
     description: "Réseau social autour de la lecture — suivez vos amis, partagez vos lectures et découvrez de nouveaux livres.",
     tags: ['React', 'Node.js', 'PostgreSQL'],
+    image: '/projects/biblly.png',
   },
   { id: 2, placeholder: true },
   { id: 3, placeholder: true },
@@ -713,29 +714,35 @@ export default function App() {
                         <p>Projet à venir</p>
                       </div>
                     ) : (
-                      <TiltCard key={p.id} className="project-card reveal" style={{ '--delay': `${i * 0.1}s` }}>
-                        {/* Head row */}
-                        <div className="project-top">
-                          <div className="project-ids">
-                            <span className="project-num">Nº {String(p.id).padStart(3, '0')}</span>
-                            <span className="project-cat">{p.category}</span>
-                          </div>
-                          <a href={p.link} className="project-arrow" aria-label="voir le projet" target="_blank" rel="noreferrer">↗</a>
+                      <TiltCard key={p.id} className="project-card project-card--featured reveal" style={{ '--delay': `${i * 0.1}s` }}>
+                        {/* Image */}
+                        <div className="project-thumb">
+                          <img src={p.image} alt={p.title} loading="lazy" />
                         </div>
-                        <h3 className="project-title">{p.title}</h3>
-                        {/* Metadata row */}
-                        <div className="project-meta">
-                          <div className="project-meta-item">
-                            <span className="meta-label">Rôle</span>
-                            <span className="meta-value">{p.role}</span>
+                        {/* Content */}
+                        <div className="project-body">
+                          <div className="project-top">
+                            <div className="project-ids">
+                              <span className="project-cat">{p.category}</span>
+                              <span className="project-num">Nº {String(p.id).padStart(3, '0')} · {p.year}</span>
+                            </div>
+                            <a href={p.link} className="project-arrow" aria-label="voir le projet" target="_blank" rel="noreferrer">↗</a>
                           </div>
-                          <div className="project-meta-item">
-                            <span className="meta-label">Année</span>
-                            <span className="meta-value">{p.year}</span>
+                          <h3 className="project-title">{p.title}</h3>
+                          <p className="project-desc">{p.description}</p>
+                          <div className="project-tags">
+                            {p.tags.map(tag => <span key={tag} className="tag">{tag}</span>)}
                           </div>
-                        </div>
-                        <div className="project-tags">
-                          {p.tags.map(tag => <span key={tag} className="tag">{tag}</span>)}
+                          <div className="project-meta">
+                            <div className="project-meta-item">
+                              <span className="meta-label">Rôle</span>
+                              <span className="meta-value">{p.role}</span>
+                            </div>
+                            <div className="project-meta-item">
+                              <span className="meta-label">Statut</span>
+                              <span className="meta-value">{p.status}</span>
+                            </div>
+                          </div>
                         </div>
                         <div className="project-line" />
                       </TiltCard>
