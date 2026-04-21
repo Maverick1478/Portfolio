@@ -109,6 +109,31 @@ function useTypewriter(words, speed = 80, pause = 2200) {
   return display
 }
 
+function useLerpScroll() {
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    if ('ontouchstart' in window) return
+    let target = window.scrollY
+    let current = window.scrollY
+    let rafId
+    const clamp = (v, lo, hi) => Math.min(Math.max(v, lo), hi)
+    const maxScroll = () => document.documentElement.scrollHeight - window.innerHeight
+    const onWheel = e => {
+      e.preventDefault()
+      target = clamp(target + e.deltaY * 0.9, 0, maxScroll())
+    }
+    const tick = () => {
+      const d = target - current
+      current += d * 0.09
+      if (Math.abs(d) > 0.3) window.scrollTo(0, current)
+      rafId = requestAnimationFrame(tick)
+    }
+    window.addEventListener('wheel', onWheel, { passive: false })
+    rafId = requestAnimationFrame(tick)
+    return () => { window.removeEventListener('wheel', onWheel); cancelAnimationFrame(rafId) }
+  }, [])
+}
+
 function useScrollReveal() {
   useEffect(() => {
     const obs = new IntersectionObserver(
@@ -444,6 +469,7 @@ export default function App() {
   const [sendError,    setSendError]   = useState(false)
   const roleText = useTypewriter(ROLES)
   useScrollReveal()
+  useLerpScroll()
 
   const handleLoaded = useCallback(() => setLoaded(true), [])
 
@@ -699,13 +725,9 @@ export default function App() {
                       <span className="service-icon">{s.icon}</span>
                     </div>
                     <h3 className="service-title">{s.title}</h3>
-                    <p className="service-desc">{s.description}</p>
                     <ul className="service-features">
-                      {s.features.map(f => <li key={f}><span className="fmark">✦</span>{f}</li>)}
+                      {s.features.slice(0,3).map(f => <li key={f}><span className="fmark">✦</span>{f}</li>)}
                     </ul>
-                    <div className="service-footer">
-                      <MagBtn className="btn btn--ghost btn--sm" onClick={() => scrollTo('contact')}>Demander un devis ↗</MagBtn>
-                    </div>
                   </TiltCard>
                 ))}
               </div>
@@ -758,19 +780,10 @@ export default function App() {
                             <span className="meta-label">Année</span>
                             <span className="meta-value">{p.year}</span>
                           </div>
-                          <div className="project-meta-item">
-                            <span className="meta-label">Statut</span>
-                            <span className="meta-value">{p.status}</span>
-                          </div>
-                          <div className="project-meta-item">
-                            <span className="meta-label">Équipe</span>
-                            <span className="meta-value">{p.team}</span>
-                          </div>
                         </div>
                         <div className="project-tags">
                           {p.tags.map(tag => <span key={tag} className="tag">{tag}</span>)}
                         </div>
-                        <a href={p.link} className="project-link">Voir le projet ↗</a>
                         <div className="project-line" />
                       </TiltCard>
                     )
@@ -857,7 +870,6 @@ export default function App() {
               <div className="section-header reveal">
                 <span className="section-label"><span className="sl-num">05 /</span> Parlons-en</span>
                 <div className="clip-reveal"><h2 className="clip-inner">Contact</h2></div>
-                <p>Un projet ? Décrivez-le.</p>
               </div>
               {sent ? (
                 <div className="form-success reveal">

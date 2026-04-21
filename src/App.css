@@ -581,7 +581,7 @@ body {
 .clip-inner {
   display: block;
   font-family: var(--fd);
-  font-size: clamp(4.2rem, 7vw, 6.8rem);
+  font-size: clamp(5rem, 9vw, 8.5rem);
   font-weight: 700;
   letter-spacing: -0.02em;
   line-height: 1.05;
@@ -936,7 +936,7 @@ body {
 }
 .service-icon { font-size:1.5rem; color:var(--green); line-height:1; }
 .service-title {
-  font-family:var(--fd); font-size:2.8rem; font-weight:700;
+  font-family:var(--fd); font-size:3.4rem; font-weight:700;
   letter-spacing:-0.02em; transition:color 0.2s;
 }
 .service-desc { font-size:1.15rem; color:var(--muted); line-height:1.85; flex:1; }
@@ -994,9 +994,9 @@ body {
 .project-arrow:hover { color:var(--green); transform:translate(3px,-3px); }
 
 .project-title {
-  font-family:var(--fd); font-size:2.6rem; font-weight:700;
+  font-family:var(--fd); font-size:3.2rem; font-weight:700;
   margin-bottom:0.75rem; letter-spacing:-0.02em;
-  transition:color 0.2s; line-height:1.1;
+  transition:color 0.2s; line-height:1.05;
 }
 .project-desc { font-size:1rem; color:var(--muted); line-height:1.8; margin-bottom:1.5rem; flex:1; }
 
@@ -1071,7 +1071,7 @@ body {
   color:var(--faint); letter-spacing:0.02em;
 }
 .expertise-title {
-  font-family:var(--fd); font-size:2.6rem; font-weight:700;
+  font-family:var(--fd); font-size:3.2rem; font-weight:700;
   letter-spacing:-0.02em; color:var(--text);
 }
 .expertise-desc {
@@ -1099,7 +1099,7 @@ body {
 .process-body { display:flex; flex-direction:column; gap:0.6rem; }
 .process-head { display:flex; align-items:center; justify-content:space-between; gap:1rem; }
 .process-title {
-  font-family:var(--fd); font-size:2.6rem; font-weight:700;
+  font-family:var(--fd); font-size:3.2rem; font-weight:700;
   letter-spacing:-0.02em; color:var(--text);
 }
 .process-dur {
