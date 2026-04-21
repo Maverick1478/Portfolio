@@ -115,22 +115,23 @@ function useLerpScroll() {
     if ('ontouchstart' in window) return
     let target = window.scrollY
     let current = window.scrollY
-    let rafId
-    const clamp = (v, lo, hi) => Math.min(Math.max(v, lo), hi)
+    let rafId = null
+    let running = false
     const maxScroll = () => document.documentElement.scrollHeight - window.innerHeight
-    const onWheel = e => {
-      e.preventDefault()
-      target = clamp(target + e.deltaY * 1.0, 0, maxScroll())
-    }
     const tick = () => {
       const d = target - current
-      current += d * 0.18
-      if (Math.abs(d) > 0.3) window.scrollTo(0, current)
+      if (Math.abs(d) < 0.5) { current = target; running = false; return }
+      current += d * 0.13
+      window.scrollTo(0, current)
       rafId = requestAnimationFrame(tick)
     }
+    const onWheel = e => {
+      e.preventDefault()
+      target = Math.min(Math.max(target + e.deltaY, 0), maxScroll())
+      if (!running) { running = true; rafId = requestAnimationFrame(tick) }
+    }
     window.addEventListener('wheel', onWheel, { passive: false })
-    rafId = requestAnimationFrame(tick)
-    return () => { window.removeEventListener('wheel', onWheel); cancelAnimationFrame(rafId) }
+    return () => { window.removeEventListener('wheel', onWheel); if (rafId) cancelAnimationFrame(rafId) }
   }, [])
 }
 
