@@ -116,9 +116,10 @@ function useScrollReveal() {
       es => es.forEach(e => e.isIntersecting && e.target.classList.add('revealed')),
       { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
     )
-    document.querySelectorAll('.reveal').forEach(el => obs.observe(el))
+    const els = document.querySelectorAll('.reveal')
+    els.forEach(el => obs.observe(el))
     return () => obs.disconnect()
-  })
+  }, [])
 }
 
 function useScramble(text, active) {
@@ -174,6 +175,7 @@ function StaggerWords({ text, animate, baseDelay = 0, className }) {
 function ParticleCanvas() {
   const ref = useRef(null)
   useEffect(() => {
+    if (window.innerWidth < 768) return
     const canvas = ref.current; if (!canvas) return
     const ctx = canvas.getContext('2d', { alpha: true })
     let id, visible = true
@@ -450,17 +452,23 @@ export default function App() {
 
 
   useEffect(() => {
+    let ticking = false
     const onScroll = () => {
-      const scrolled = window.scrollY
-      const total = document.documentElement.scrollHeight - window.innerHeight
-      setScroll((scrolled / total) * 100)
-      setShowTop(scrolled > 400)
-      setNavScrolled(scrolled > 18)
-      const y = scrolled + 130
-      for (let i = NAV_ITEMS.length - 1; i >= 0; i--) {
-        const el = document.getElementById(NAV_ITEMS[i])
-        if (el && el.offsetTop <= y) { setActive(NAV_ITEMS[i]); break }
-      }
+      if (ticking) return
+      ticking = true
+      requestAnimationFrame(() => {
+        const scrolled = window.scrollY
+        const total = document.documentElement.scrollHeight - window.innerHeight
+        setScroll((scrolled / total) * 100)
+        setShowTop(scrolled > 400)
+        setNavScrolled(scrolled > 18)
+        const y = scrolled + 130
+        for (let i = NAV_ITEMS.length - 1; i >= 0; i--) {
+          const el = document.getElementById(NAV_ITEMS[i])
+          if (el && el.offsetTop <= y) { setActive(NAV_ITEMS[i]); break }
+        }
+        ticking = false
+      })
     }
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)

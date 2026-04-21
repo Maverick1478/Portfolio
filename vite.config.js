@@ -6,5 +6,11 @@ export default defineConfig({
   build: {
     target: 'esnext',
     cssMinify: true,
+    sourcemap: false,
+    rollupOptions: {
+      output: {
+        manualChunks: { vendor: ['react', 'react-dom'] },
+      },
+    },
   },
 })
