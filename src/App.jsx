@@ -633,36 +633,6 @@ export default function App() {
                 </div>
               </div>
 
-              {/* ── Right — info sidebar ── */}
-              <aside className={`hero-aside ${loaded ? 'hero-aside--in' : ''}`}>
-                {/* Statut */}
-                <div className="ha-status">
-                  <span className="ha-status-dot" />
-                  <span className="ha-status-text">Disponible</span>
-                </div>
-                <div className="ha-sep" />
-                {/* Localisation */}
-                <div className="ha-geo">
-                  <span className="ha-geo-city">Paris</span>
-                  <span className="ha-geo-line">France · 48°51′N</span>
-                </div>
-                <div className="ha-sep" />
-                {/* Stack */}
-                <div className="ha-stack">
-                  <span className="ha-stack-label">Stack</span>
-                  <div className="ha-stack-tags">
-                    {['React', 'Node.js', 'TypeScript', 'PostgreSQL', 'Next.js'].map(t => (
-                      <span key={t} className="ha-tag">{t}</span>
-                    ))}
-                  </div>
-                </div>
-                <div className="ha-sep" />
-                {/* Année */}
-                <div className="ha-year-block">
-                  <span className="ha-year-num">2025</span>
-                  <span className="ha-year-label">Supinfo · 3A</span>
-                </div>
-              </aside>
 
             </div>
 
@@ -670,7 +640,7 @@ export default function App() {
             <div className="hero-marquee">
               <div className="hero-marquee-track">
                 {[...MARQUEE_ITEMS, ...MARQUEE_ITEMS].map((item, i) => (
-                  <span key={i} className={item === '◆' ? 'mq-sep' : 'mq-item'} {...(item !== '◆' ? { 'data-tech': item } : {})}>{item}</span>
+                  <span key={i} className={item === '✦' ? 'mq-sep' : 'mq-item'} {...(item !== '✦' ? { 'data-tech': item } : {})}>{item}</span>
                 ))}
               </div>
             </div>
