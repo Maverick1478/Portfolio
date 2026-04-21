@@ -408,7 +408,13 @@ export default function App() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  const scrollTo = id => { document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' }); setMenuOpen(false) }
+  const scrollTo = id => {
+    const el = document.getElementById(id)
+    if (!el) return
+    const top = el.getBoundingClientRect().top + window.scrollY - 68
+    window.scrollTo({ top, behavior: 'smooth' })
+    setMenuOpen(false)
+  }
 
   const validateForm = () => {
     const e = {}
@@ -529,13 +535,6 @@ export default function App() {
                   <span className="hero-meta-item hero-meta-avail">● Disponible</span>
                 </div>
 
-                {/* Mobile avatar */}
-                <div className="hero-mob-av">
-                  <span className="hero-mob-av-ring" />
-                  <span className="hero-mob-av-ring hero-mob-av-ring--2" />
-                  AC
-                </div>
-
                 <h1 className="hero-name" aria-label="Andrea Coustenoble">
                   <span className="hero-name-line">
                     <SplitText text="Andrea" animate={loaded} delay={0.1} className="hn-first" />
@@ -581,17 +580,6 @@ export default function App() {
                 </div>
               </div>
 
-              <div className="hero-visual">
-                <div className="avatar-wrap">
-                  <div className="avatar-orbit" />
-                  <div className="avatar-orbit avatar-orbit--2" />
-                  <div className="avatar">AC</div>
-                  <div className="hero-badge hero-badge--1">React</div>
-                  <div className="hero-badge hero-badge--2">Node.js</div>
-                  <div className="hero-badge hero-badge--3">Design</div>
-                  <div className="hero-badge hero-badge--4">Supinfo</div>
-                </div>
-              </div>
             </div>
 
             {/* Marquee */}
