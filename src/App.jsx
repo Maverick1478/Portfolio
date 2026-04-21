@@ -25,9 +25,9 @@ const STATUS_STEPS = [
 ]
 
 const MARQUEE_ITEMS = [
-  'React', '◆', 'Node.js', '◆', 'TypeScript', '◆', 'Next.js', '◆',
-  'PostgreSQL', '◆', 'Tailwind CSS', '◆', 'Figma', '◆', 'Docker', '◆',
-  'REST API', '◆', 'Vercel', '◆', 'Git', '◆', 'MongoDB', '◆',
+  'React', '✦', 'Node.js', '✦', 'TypeScript', '✦', 'Next.js', '✦',
+  'PostgreSQL', '✦', 'Tailwind CSS', '✦', 'Figma', '✦', 'Docker', '✦',
+  'REST API', '✦', 'Vercel', '✦', 'Git', '✦', 'MongoDB', '✦',
 ]
 
 const SERVICES = [
@@ -120,11 +120,11 @@ function useLerpScroll() {
     const maxScroll = () => document.documentElement.scrollHeight - window.innerHeight
     const onWheel = e => {
       e.preventDefault()
-      target = clamp(target + e.deltaY * 0.9, 0, maxScroll())
+      target = clamp(target + e.deltaY * 1.0, 0, maxScroll())
     }
     const tick = () => {
       const d = target - current
-      current += d * 0.09
+      current += d * 0.18
       if (Math.abs(d) > 0.3) window.scrollTo(0, current)
       rafId = requestAnimationFrame(tick)
     }
