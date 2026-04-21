@@ -72,7 +72,13 @@ body {
 ::-webkit-scrollbar-thumb { background: var(--green); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--green-l); }
 
-.app { min-height: 100vh; }
+.app {
+  min-height: 100vh;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.8s ease, transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.app--loaded { opacity: 1; transform: translateY(0); }
 
 /* ═══════════════════════════════════════════════════════════════════════════
    LOADING SCREEN
