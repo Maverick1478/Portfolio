@@ -720,7 +720,7 @@ export default function App() {
                             <span className="project-num">Nº {String(p.id).padStart(3, '0')}</span>
                             <span className="project-cat">{p.category}</span>
                           </div>
-                          <a href={p.link} className="project-arrow" aria-label="voir le projet">↗</a>
+                          <a href={p.link} className="project-arrow" aria-label="voir le projet" target="_blank" rel="noreferrer">↗</a>
                         </div>
                         <h3 className="project-title">{p.title}</h3>
                         {/* Metadata row */}
