@@ -303,17 +303,11 @@ function LoadingScreen({ onComplete }) {
     }
 
     rafId = requestAnimationFrame(tick)
-    // Phase 1 : contenu fond doucement (0.55s)
-    const tFade   = setTimeout(() => setFadeOut(true),   2450)
-    // Phase 2 : iris se FERME (0.78s → terminée à ~3680ms)
-    const tExit   = setTimeout(() => setExitAnim(true),  2900)
-    // Phase 3 : souffle de 50ms puis iris s'OUVRE (page révélée)
-    const tReveal = setTimeout(() => onComplete(),        3730)
-    // Phase 4 : loader retiré du DOM
-    const tGone   = setTimeout(() => setGone(true),       5000)
+    const tFade = setTimeout(() => { setFadeOut(true); setExitAnim(true); onComplete() }, 2600)
+    const tGone = setTimeout(() => setGone(true), 3700)
     return () => {
       clearTimeout(t0); cancelAnimationFrame(rafId)
-      clearTimeout(tFade); clearTimeout(tExit); clearTimeout(tReveal); clearTimeout(tGone)
+      clearTimeout(tFade); clearTimeout(tGone)
     }
   }, [onComplete])
 
@@ -430,8 +424,19 @@ export default function App() {
   const scrollTo = id => {
     const el = document.getElementById(id)
     if (!el) return
-    const top = el.getBoundingClientRect().top + window.scrollY - 68
-    window.scrollTo({ top, behavior: 'smooth' })
+    const start = window.scrollY
+    const target = el.getBoundingClientRect().top + window.scrollY - 68
+    const dist = target - start
+    const dur = 900
+    let t0 = null
+    const ease = t => t < 0.5 ? 2*t*t : -1+(4-2*t)*t
+    const step = ts => {
+      if (!t0) t0 = ts
+      const p = Math.min((ts - t0) / dur, 1)
+      window.scrollTo(0, start + dist * ease(p))
+      if (p < 1) requestAnimationFrame(step)
+    }
+    requestAnimationFrame(step)
     setMenuOpen(false)
   }
 

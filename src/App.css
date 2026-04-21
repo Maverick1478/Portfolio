@@ -72,22 +72,14 @@ body {
 ::-webkit-scrollbar-thumb { background: var(--green); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--green-l); }
 
-/* ── App entrance : iris open (clip-path only — GPU-composited, zero repaints) */
+/* ── App entrance : simple fade-in ──────────────────────────────────────── */
 .app {
   min-height: 100vh;
-  clip-path: circle(0% at 50% 48%);
-  will-change: clip-path;
-  transition: clip-path 1.15s cubic-bezier(0.22, 1, 0.36, 1);
+  opacity: 0;
+  transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1);
 }
-.app--loaded {
-  clip-path: circle(150% at 50% 48%);
-}
-/* After iris fully open: release GPU layer */
-.app--settled {
-  clip-path: none;
-  will-change: auto;
-  transition: none;
-}
+.app--loaded  { opacity: 1; }
+.app--settled { transition: none; }
 
 /* ═══════════════════════════════════════════════════════════════════════════
    LOADING SCREEN
@@ -106,16 +98,15 @@ body {
   overflow: hidden;
 }
 
-/* ── Phase 2 : iris close — organique, lent-rapide-lent ─────────────────── */
+/* ── Phase 2 : fondu de sortie simple ────────────────────────────────────── */
 .loader--exit {
-  animation: loaderIris 0.78s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+  animation: loaderFade 0.9s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   pointer-events: none;
 }
-@keyframes loaderIris {
-  0%   { clip-path: circle(120% at 50% 48%); }
-  100% { clip-path: circle(0%   at 50% 48%); }
+@keyframes loaderFade {
+  0%   { opacity: 1; }
+  100% { opacity: 0; }
 }
-/* Les éléments sous l'iris sont masqués — pas besoin d'animer séparément */
 
 /* Ambient glows */
 .ldr-glow {
