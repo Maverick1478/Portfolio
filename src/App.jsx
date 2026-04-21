@@ -215,6 +215,56 @@ function Grain() {
   return <div className="grain" aria-hidden="true" />
 }
 
+function Cursor() {
+  const dot  = useRef(null)
+  const ring = useRef(null)
+  useEffect(() => {
+    let mx = -200, my = -200, rx = -200, ry = -200, id
+    const mv = e => { mx = e.clientX; my = e.clientY }
+    const over = e => { if (e.target.closest('a,button,[role="button"]')) { dot.current?.classList.add('cd--hov'); ring.current?.classList.add('cr--hov') } }
+    const out  = e => { if (e.target.closest('a,button,[role="button"]')) { dot.current?.classList.remove('cd--hov'); ring.current?.classList.remove('cr--hov') } }
+    const tick = () => {
+      if (dot.current)  dot.current.style.transform  = `translate(${mx - 4}px,${my - 4}px)`
+      rx += (mx - rx) * 0.11; ry += (my - ry) * 0.11
+      if (ring.current) ring.current.style.transform = `translate(${rx - 18}px,${ry - 18}px)`
+      id = requestAnimationFrame(tick)
+    }
+    window.addEventListener('mousemove', mv, { passive: true })
+    document.addEventListener('mouseover', over)
+    document.addEventListener('mouseout',  out)
+    id = requestAnimationFrame(tick)
+    return () => { window.removeEventListener('mousemove', mv); document.removeEventListener('mouseover', over); document.removeEventListener('mouseout', out); cancelAnimationFrame(id) }
+  }, [])
+  return (
+    <>
+      <div ref={dot}  className="cd"  aria-hidden="true" />
+      <div ref={ring} className="cr"  aria-hidden="true" />
+    </>
+  )
+}
+
+function TiltCard({ children, className, style }) {
+  const ref = useRef(null)
+  useEffect(() => {
+    const el = ref.current; if (!el) return
+    const mv = e => {
+      const r = el.getBoundingClientRect()
+      const x = (e.clientX - r.left  - r.width  / 2) / (r.width  / 2)
+      const y = (e.clientY - r.top   - r.height / 2) / (r.height / 2)
+      el.style.transition = 'transform 0.08s ease'
+      el.style.transform  = `perspective(900px) rotateY(${x * 5}deg) rotateX(${-y * 5}deg) translateY(-6px)`
+    }
+    const lv = () => {
+      el.style.transition = 'transform 0.55s cubic-bezier(0.22,1,0.36,1)'
+      el.style.transform  = ''
+    }
+    el.addEventListener('mousemove', mv)
+    el.addEventListener('mouseleave', lv)
+    return () => { el.removeEventListener('mousemove', mv); el.removeEventListener('mouseleave', lv) }
+  }, [])
+  return <div ref={ref} className={className} style={style}>{children}</div>
+}
+
 function Decor({ children }) {
   return <div className="s-decor" aria-hidden="true">{children}</div>
 }
@@ -480,6 +530,7 @@ export default function App() {
   return (
     <>
       {!loaded && <LoadingScreen onComplete={handleLoaded} />}
+      <Cursor />
       <Grain />
 
       <div className={`app${loaded ? ' app--loaded' : ''}`}>
@@ -570,7 +621,7 @@ export default function App() {
 
                 <p className="hero-bio">
                   <StaggerWords
-                    text="Je crée des sites web élégants et sur mesure pour les particuliers et professionnels. Passionné par l'expérience utilisateur et le design moderne — chaque projet reflète votre identité."
+                    text="Je conçois des expériences web soignées — du design au code."
                     animate={loaded}
                     baseDelay={0.85}
                   />
@@ -579,7 +630,6 @@ export default function App() {
                 <div className={`hero-actions ${loaded ? 'hero-actions--in' : ''}`}>
                   <MagBtn className="btn btn--primary" onClick={() => scrollTo('projects')}>Voir mes projets</MagBtn>
                   <MagBtn className="btn btn--ghost" onClick={() => scrollTo('contact')}>Me contacter ↗</MagBtn>
-                  <MagBtn className="btn btn--outline" href="#" download>↓ CV</MagBtn>
                 </div>
 
                 <div className={`hero-socials ${loaded ? 'hero-socials--in' : ''}`}>
@@ -647,11 +697,10 @@ export default function App() {
               <div className="section-header reveal">
                 <span className="section-label"><span className="sl-num">01 /</span> Ce que je propose</span>
                 <div className="clip-reveal"><h2 className="clip-inner">Services</h2></div>
-                <p>Des solutions web sur mesure pour mettre en valeur votre activité</p>
               </div>
               <div className="services-grid">
                 {SERVICES.map((s, i) => (
-                  <div key={s.id} className="service-card reveal" style={{ '--delay': `${i * 0.15}s` }}>
+                  <TiltCard key={s.id} className="service-card reveal" style={{ '--delay': `${i * 0.15}s` }}>
                     <div className="service-head">
                       <span className="service-num">{s.num}</span>
                       <span className="service-icon">{s.icon}</span>
@@ -662,10 +711,9 @@ export default function App() {
                       {s.features.map(f => <li key={f}><span className="fmark">✦</span>{f}</li>)}
                     </ul>
                     <div className="service-footer">
-                      <span className="service-price">Devis sur demande</span>
                       <MagBtn className="btn btn--ghost btn--sm" onClick={() => scrollTo('contact')}>Demander un devis ↗</MagBtn>
                     </div>
-                  </div>
+                  </TiltCard>
                 ))}
               </div>
             </div>
@@ -687,7 +735,6 @@ export default function App() {
               <div className="section-header reveal">
                 <span className="section-label"><span className="sl-num">02 /</span> Réalisations</span>
                 <div className="clip-reveal"><h2 className="clip-inner">Projets</h2></div>
-                <p>Une sélection de ce que j'ai construit</p>
               </div>
               <div className="projects-grid">
                 {PROJECTS.map((p, i) => (
@@ -698,7 +745,7 @@ export default function App() {
                         <p>Projet à venir</p>
                       </div>
                     ) : (
-                      <div key={p.id} className="project-card reveal" style={{ '--delay': `${i * 0.1}s` }}>
+                      <TiltCard key={p.id} className="project-card reveal" style={{ '--delay': `${i * 0.1}s` }}>
                         {/* Head row */}
                         <div className="project-top">
                           <div className="project-ids">
@@ -733,7 +780,7 @@ export default function App() {
                         </div>
                         <a href={p.link} className="project-link">Voir le projet ↗</a>
                         <div className="project-line" />
-                      </div>
+                      </TiltCard>
                     )
                 ))}
               </div>
@@ -755,21 +802,19 @@ export default function App() {
               <div className="section-header reveal">
                 <span className="section-label"><span className="sl-num">03 /</span> Compétences</span>
                 <div className="clip-reveal"><h2 className="clip-inner">Expertise</h2></div>
-                <p>Technologies et domaines avec lesquels je travaille</p>
               </div>
               <div className="expertise-grid">
                 {EXPERTISE.map((e, i) => (
-                  <div key={e.num} className="expertise-card reveal" style={{ '--delay': `${i * 0.12}s` }}>
+                  <TiltCard key={e.num} className="expertise-card reveal" style={{ '--delay': `${i * 0.12}s` }}>
                     <div className="expertise-head">
                       <span className="expertise-num">{e.num}</span>
                       <span className="expertise-total">/ 04</span>
                     </div>
                     <h3 className="expertise-title">{e.title}</h3>
-                    <p className="expertise-desc">{e.description}</p>
                     <div className="expertise-tags">
                       {e.items.map(item => <span key={item} className="tag">{item}</span>)}
                     </div>
-                  </div>
+                  </TiltCard>
                 ))}
               </div>
             </div>
@@ -789,7 +834,6 @@ export default function App() {
               <div className="section-header reveal">
                 <span className="section-label"><span className="sl-num">04 /</span> Ma méthode</span>
                 <div className="clip-reveal"><h2 className="clip-inner">Processus</h2></div>
-                <p>De la première idée à la mise en ligne</p>
               </div>
               <div className="process-list">
                 {PROCESS.map((step, i) => (
@@ -822,7 +866,7 @@ export default function App() {
               <div className="section-header reveal">
                 <span className="section-label"><span className="sl-num">05 /</span> Parlons-en</span>
                 <div className="clip-reveal"><h2 className="clip-inner">Contact</h2></div>
-                <p>Un projet en tête ? Décrivez-le moi.</p>
+                <p>Un projet ? Décrivez-le.</p>
               </div>
               {sent ? (
                 <div className="form-success reveal">
@@ -870,7 +914,7 @@ export default function App() {
         <footer className="footer">
           <div className="container footer-inner">
             <span className="footer-logo">AC</span>
-            <p>© 2025 Andrea Coustenoble — Développé avec React & déployé sur Vercel</p>
+            <p>© 2025 Andrea Coustenoble</p>
             <div className="footer-links">
               <a href="https://github.com" target="_blank" rel="noreferrer">GitHub ↗</a>
               <a href="https://linkedin.com" target="_blank" rel="noreferrer">LinkedIn ↗</a>

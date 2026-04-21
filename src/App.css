@@ -72,6 +72,28 @@ body {
 ::-webkit-scrollbar-thumb { background: var(--green); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--green-l); }
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   CUSTOM CURSOR — dot + ring, desktop only
+═══════════════════════════════════════════════════════════════════════════ */
+@media (pointer: fine) {
+  * { cursor: none !important; }
+  .cd {
+    position: fixed; top: 0; left: 0; z-index: 99999;
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--green); pointer-events: none; will-change: transform;
+    transition: width 0.18s, height 0.18s, background 0.18s;
+  }
+  .cd--hov { width: 14px; height: 14px; background: var(--gold); }
+  .cr {
+    position: fixed; top: 0; left: 0; z-index: 99998;
+    width: 36px; height: 36px; border-radius: 50%;
+    border: 1.5px solid rgba(74,140,110,0.45);
+    pointer-events: none; will-change: transform;
+    transition: width 0.28s, height 0.28s, border-color 0.28s;
+  }
+  .cr--hov { width: 52px; height: 52px; border-color: rgba(200,168,92,0.55); }
+}
+
 .app {
   min-height: 100vh;
   opacity: 0;
@@ -915,7 +937,7 @@ body {
 .service-icon { font-size:1.5rem; color:var(--green); line-height:1; }
 .service-title {
   font-family:var(--fd); font-size:2.2rem; font-weight:700;
-  letter-spacing:-0.01em; cursor:default; transition:color 0.2s;
+  letter-spacing:-0.01em; transition:color 0.2s;
 }
 .service-desc { font-size:1.05rem; color:var(--muted); line-height:1.85; flex:1; }
 .service-features { list-style:none; display:flex; flex-direction:column; gap:0.7rem; }
