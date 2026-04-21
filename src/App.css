@@ -1020,7 +1020,6 @@ body {
   margin-bottom:0.75rem; letter-spacing:-0.01em; cursor:default;
   transition:color 0.2s; line-height:1.15;
 }
-.project-card:hover .project-title { color:var(--green); }
 .project-desc { font-size:1rem; color:var(--muted); line-height:1.8; margin-bottom:1.5rem; flex:1; }
 
 /* Metadata grid */
