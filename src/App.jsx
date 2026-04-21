@@ -1,13 +1,11 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import './App.css'
 
-// ── Web3Forms — va sur web3forms.com, entre maverickjet12@gmail.com ───────────
-// Tu reçois ta clé par email → remplace la valeur ci-dessous
 const W3F_KEY = '1c6f1269-cc49-4b16-bae9-d7d8462d8e1a'
 
 // ── Data ──────────────────────────────────────────────────────────────────────
-const NAV_ITEMS = ['about', 'services', 'projects', 'skills', 'contact']
-const NAV_LABELS = { about: 'À propos', services: 'Services', projects: 'Projets', skills: 'Compétences', contact: 'Contact' }
+const NAV_ITEMS  = ['about', 'services', 'projects', 'skills', 'process', 'contact']
+const NAV_LABELS = { about: 'À propos', services: 'Services', projects: 'Projets', skills: 'Compétences', process: 'Méthode', contact: 'Contact' }
 
 const ROLES = [
   'Développeur Web',
@@ -34,12 +32,12 @@ const MARQUEE_ITEMS = [
 
 const SERVICES = [
   {
-    id: 1, icon: '◈', title: 'Site Vitrine',
+    id: 1, num: '01', icon: '◈', title: 'Site Vitrine',
     description: "Un site élégant qui présente votre activité, vos services et vous met en valeur. Idéal pour les artisans, restaurateurs et professionnels indépendants.",
     features: ['Design sur mesure', 'Responsive mobile', 'SEO optimisé', 'Formulaire de contact'],
   },
   {
-    id: 2, icon: '◉', title: 'Refonte de Site',
+    id: 2, num: '02', icon: '◉', title: 'Refonte de Site',
     description: "Votre site est daté ou ne vous ressemble plus ? Je le modernise avec un design actuel et une meilleure expérience utilisateur.",
     features: ["Audit de l'existant", 'Nouveau design', 'Migration du contenu', 'Optimisation performance'],
   },
@@ -48,6 +46,10 @@ const SERVICES = [
 const PROJECTS = [
   {
     id: 1, title: '3SupContent', year: '2024', link: '#', placeholder: false,
+    category: 'Plateforme Web',
+    role: 'Full-Stack',
+    status: 'Livré',
+    team: '4 pers.',
     description: "Plateforme de gestion de contenu développée en équipe à Supinfo 3A. Gestion des articles, rôles utilisateurs et interface d'administration.",
     tags: ['React', 'Node.js', 'PostgreSQL'],
   },
@@ -55,10 +57,34 @@ const PROJECTS = [
   { id: 3, placeholder: true },
 ]
 
-const SKILLS = [
-  { category: 'Frontend', items: ['React', 'Next.js', 'TypeScript', 'HTML / CSS', 'Tailwind CSS'] },
-  { category: 'Backend',  items: ['Node.js', 'Express', 'PostgreSQL', 'MongoDB', 'REST API'] },
-  { category: 'Outils',   items: ['Git', 'Docker', 'Figma', 'VS Code', 'Vercel'] },
+const EXPERTISE = [
+  {
+    num: '01', title: 'Frontend',
+    description: 'Interfaces modernes, responsives et accessibles conçues pour une expérience utilisateur irréprochable.',
+    items: ['React', 'Next.js', 'TypeScript', 'HTML / CSS', 'Tailwind CSS'],
+  },
+  {
+    num: '02', title: 'Backend',
+    description: 'APIs robustes et bases de données adaptées à chaque projet, du prototype à la production.',
+    items: ['Node.js', 'Express', 'PostgreSQL', 'MongoDB', 'REST API'],
+  },
+  {
+    num: '03', title: 'Design & UX',
+    description: 'Prototypage et conception d\'interfaces pensées pour l\'utilisateur, du wireframe au pixel-perfect.',
+    items: ['Figma', 'Responsive Design', 'Animations CSS', 'Accessibilité'],
+  },
+  {
+    num: '04', title: 'Outils & Deploy',
+    description: 'Workflow moderne pour un développement efficace, des tests solides et un déploiement serein.',
+    items: ['Git', 'Docker', 'Vercel', 'VS Code', 'CI/CD'],
+  },
+]
+
+const PROCESS = [
+  { num: '01', title: 'Découverte', duration: '1–2 jours', desc: 'Écoute de vos besoins, objectifs et contraintes. On pose les bases du projet ensemble.' },
+  { num: '02', title: 'Conception', duration: '3–5 jours', desc: 'Maquettes et prototypes. Le design est validé avant tout développement.' },
+  { num: '03', title: 'Développement', duration: '1–4 semaines', desc: 'Intégration et développement des fonctionnalités. Tests continus à chaque étape.' },
+  { num: '04', title: 'Livraison', duration: '1–2 jours', desc: 'Mise en ligne, tests finaux et prise en main de votre outil.' },
 ]
 
 // ── Hooks ─────────────────────────────────────────────────────────────────────
@@ -92,21 +118,6 @@ function useScrollReveal() {
     document.querySelectorAll('.reveal').forEach(el => obs.observe(el))
     return () => obs.disconnect()
   })
-}
-
-function useCardTilt(ref) {
-  useEffect(() => {
-    const c = ref.current; if (!c) return
-    const mv = e => {
-      const r = c.getBoundingClientRect()
-      const x = (e.clientX - r.left) / r.width - 0.5
-      const y = (e.clientY - r.top) / r.height - 0.5
-      c.style.transform = `perspective(900px) rotateY(${x * 7}deg) rotateX(${-y * 7}deg) translateY(-4px) scale(1.01)`
-    }
-    const lv = () => { c.style.transform = '' }
-    c.addEventListener('mousemove', mv); c.addEventListener('mouseleave', lv)
-    return () => { c.removeEventListener('mousemove', mv); c.removeEventListener('mouseleave', lv) }
-  }, [ref])
 }
 
 function useScramble(text, active) {
@@ -167,7 +178,6 @@ function ParticleCanvas() {
     let id, visible = true
     const resize = () => { canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight }
     resize(); window.addEventListener('resize', resize, { passive: true })
-    // Pause le RAF quand le hero est hors écran → 0 CPU/GPU gaspillé
     const obs = new IntersectionObserver(([e]) => { visible = e.isIntersecting }, { threshold: 0 })
     obs.observe(canvas)
     class P {
@@ -175,12 +185,11 @@ function ParticleCanvas() {
       tick() { this.x+=this.vx; this.y+=this.vy; if(this.x<0||this.x>canvas.width)this.vx*=-1; if(this.y<0||this.y>canvas.height)this.vy*=-1 }
       draw() { ctx.beginPath(); ctx.arc(this.x,this.y,this.r,0,Math.PI*2); ctx.fillStyle='rgba(74,140,110,0.18)'; ctx.fill() }
     }
-    // Densité réduite : 22000 au lieu de 13000, max 32 au lieu de 60
     const pts = Array.from({ length: Math.min(Math.floor(canvas.width*canvas.height/22000), 32) }, () => new P())
     const DIST = 85
     const loop = () => {
       id = requestAnimationFrame(loop)
-      if (!visible) return   // ne dessine rien quand hors viewport
+      if (!visible) return
       ctx.clearRect(0,0,canvas.width,canvas.height)
       for(let i=0;i<pts.length;i++){
         pts[i].tick(); pts[i].draw()
@@ -196,28 +205,20 @@ function ParticleCanvas() {
   return <canvas ref={ref} className="particle-canvas" />
 }
 
-function TiltCard({ className, children, style }) {
-  const ref = useRef(null); useCardTilt(ref)
-  return <div ref={ref} className={className} style={style}>{children}</div>
-}
-
 function ScrambleTitle({ text, tag: T = 'h3', className }) {
   const [hov, setHov] = useState(false)
   const disp = useScramble(text, hov)
   return <T className={className} onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}>{disp}</T>
 }
 
-// ── Grain Overlay ─────────────────────────────────────────────────────────────
 function Grain() {
   return <div className="grain" aria-hidden="true" />
 }
 
-// ── Decorative Background ─────────────────────────────────────────────────────
 function Decor({ children }) {
   return <div className="s-decor" aria-hidden="true">{children}</div>
 }
 
-// ── Star Field ────────────────────────────────────────────────────────────────
 function StarField({ count = 30, dark = false }) {
   const stars = useMemo(() =>
     Array.from({ length: count }, (_, i) => ({
@@ -252,19 +253,11 @@ function StarField({ count = 30, dark = false }) {
   )
 }
 
-// ── Section Divider ───────────────────────────────────────────────────────────
 function Divider() {
-  return (
-    <div className="sec-div" aria-hidden="true">
-      <span className="sec-div-line" />
-      <span className="sec-div-gem">◆</span>
-      <span className="sec-div-line" />
-    </div>
-  )
+  return <div className="sec-div" aria-hidden="true" />
 }
 
-// ── Magnetic Button ───────────────────────────────────────────────────────────
-function MagBtn({ children, className, onClick, type, href, download }) {
+function MagBtn({ children, className, onClick, type, href, download, disabled }) {
   const ref = useRef(null)
   useEffect(() => {
     const el = ref.current; if (!el) return
@@ -279,7 +272,7 @@ function MagBtn({ children, className, onClick, type, href, download }) {
     return () => { el.removeEventListener('mousemove', mv); el.removeEventListener('mouseleave', lv) }
   }, [])
   if (href) return <a ref={ref} className={className} href={href} download={download}>{children}</a>
-  return <button ref={ref} className={className} onClick={onClick} type={type}>{children}</button>
+  return <button ref={ref} className={className} onClick={onClick} type={type} disabled={disabled}>{children}</button>
 }
 
 // ── Loading Screen ────────────────────────────────────────────────────────────
@@ -316,58 +309,36 @@ function LoadingScreen({ onComplete }) {
 
   return (
     <div className={`loader ${slideUp ? 'loader--up' : ''}`}>
-      {/* Ambient glow */}
       <div className="ldr-glow ldr-glow--1" />
       <div className="ldr-glow ldr-glow--2" />
-
-      {/* Corner ornaments */}
       <div className="ldr-orn ldr-orn--tl"><span /><span /></div>
       <div className="ldr-orn ldr-orn--tr"><span /><span /></div>
       <div className="ldr-orn ldr-orn--bl"><span /><span /></div>
       <div className="ldr-orn ldr-orn--br"><span /><span /></div>
-
-      {/* Side labels */}
       <span className="ldr-side-label ldr-side-label--l">ANDREA COUSTENOBLE</span>
       <span className="ldr-side-label ldr-side-label--r">PORTFOLIO 2025</span>
 
-      {/* Main content */}
       <div className={`ldr-content ${fadeOut ? 'ldr-content--out' : ''}`}>
-
-        {/* Rings */}
         <div className="ldr-rings">
-          {/* Outer dashed ring — spins */}
           <svg className="ldr-svg ldr-svg--spin" viewBox="0 0 240 240">
             <circle cx="120" cy="120" r="112" fill="none" stroke="rgba(74,140,110,0.2)" strokeWidth="1" strokeDasharray="6 14" />
             <circle cx="120" cy="120" r="112" fill="none" stroke="rgba(200,168,92,0.08)" strokeWidth="0.5" strokeDasharray="2 30" />
           </svg>
-
-          {/* Inner drawing ring */}
           <svg className="ldr-svg ldr-svg--draw" viewBox="0 0 240 240">
-            {/* Track */}
             <circle cx="120" cy="120" r="96" fill="none" stroke="rgba(74,140,110,0.12)" strokeWidth="1" />
-            {/* Draw animation */}
             <circle cx="120" cy="120" r="96" fill="none"
               stroke="rgba(200,168,92,0.75)" strokeWidth="1.2"
               strokeDasharray="603" strokeDashoffset="603"
               strokeLinecap="round" className="ldr-ring-draw" />
           </svg>
-
-          {/* Diamond marks at cardinal points */}
           <span className="ldr-diamond ldr-diamond--n" />
           <span className="ldr-diamond ldr-diamond--e" />
           <span className="ldr-diamond ldr-diamond--s" />
           <span className="ldr-diamond ldr-diamond--w" />
-
-          {/* Glow behind rings */}
           <div className="ldr-ring-glow" />
-
-          {/* "AC" center */}
-          <div className="ldr-ac">
-            <span>A</span><span>C</span>
-          </div>
+          <div className="ldr-ac"><span>A</span><span>C</span></div>
         </div>
 
-        {/* Name */}
         <div className={`ldr-name ${nameIn ? 'ldr-name--in' : ''}`}>
           <div className="ldr-name-row ldr-name-row--first">
             {'Andrea'.split('').map((c, i) => (
@@ -381,12 +352,10 @@ function LoadingScreen({ onComplete }) {
           </div>
         </div>
 
-        {/* Divider */}
         <div className="ldr-divider">
           <span className="ldr-div-line" /><span className="ldr-div-label">Développeur Web</span><span className="ldr-div-line" />
         </div>
 
-        {/* Progress */}
         <div className="ldr-progress">
           <div className="ldr-bar">
             <div className="ldr-bar-fill" style={{ width: `${progress}%` }} />
@@ -397,10 +366,8 @@ function LoadingScreen({ onComplete }) {
             <span className="ldr-pct">{String(progress).padStart(3,'0')}<small>%</small></span>
           </div>
         </div>
-
       </div>
 
-      {/* Bottom inscription */}
       <p className="ldr-bottom">Supinfo · 3ème année · Disponible pour missions</p>
     </div>
   )
@@ -493,10 +460,8 @@ export default function App() {
 
       <div className={`app ${loaded ? 'app--loaded' : ''}`}>
 
-        {/* Scroll progress line */}
         <div className="scroll-progress" style={{ width: `${scrollPct}%` }} />
 
-        {/* Back to top */}
         <button
           className={`back-top ${showTop ? 'back-top--visible' : ''}`}
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
@@ -520,7 +485,7 @@ export default function App() {
               ))}
             </ul>
             <div className="nav-right">
-              <MagBtn className="nav-cta" onClick={() => scrollTo('contact')}>Me contacter</MagBtn>
+              <MagBtn className="nav-cta" onClick={() => scrollTo('contact')}>Me contacter ↗</MagBtn>
               <button className="nav-burger" onClick={() => setMenuOpen(!menuOpen)} aria-label="menu">
                 <span className={menuOpen ? 'open' : ''} />
                 <span className={menuOpen ? 'open' : ''} />
@@ -535,38 +500,36 @@ export default function App() {
           {/* ── HERO ── */}
           <section id="about" className="section section--hero">
             <ParticleCanvas />
-            {/* Aurora bands — 3 au lieu de 5 */}
             <div className="aurora aurora--1" />
             <div className="aurora aurora--2" />
             <div className="aurora aurora--3" />
-            {/* Fog nebula — 2 au lieu de 3 */}
             <div className="hfog hfog--1" />
             <div className="hfog hfog--2" />
-            {/* Lens flare */}
             <div className="hflare" />
-            {/* Shooting stars — 2 au lieu de 5 */}
             <div className="shoot shoot--1" />
             <div className="shoot shoot--2" />
-            {/* Glows + blobs */}
             <div className="hero-glow hero-glow--1" />
             <div className="hero-glow hero-glow--2" />
             <div className="hblob hblob--1" />
             <div className="hblob hblob--2" />
-            {/* Floating rings — 4 au lieu de 6 */}
             <div className="hring hring--1" />
             <div className="hring hring--2" />
             <div className="hring hring--3" />
             <div className="hring hring--4" />
-            {/* Stars réduit */}
             <StarField count={22} />
 
             <div className="container hero-container">
               <div className="hero-content">
-                <p className={`hero-eyebrow ${loaded ? 'hero-eyebrow--in' : ''}`}>
-                  Étudiant Supinfo · 3ème année
-                </p>
+                {/* Technical data row — Becquet-style */}
+                <div className={`hero-meta ${loaded ? 'hero-meta--in' : ''}`}>
+                  <span className="hero-meta-item">48°51′N, 2°21′E</span>
+                  <span className="hero-meta-sep">·</span>
+                  <span className="hero-meta-item">Paris, France</span>
+                  <span className="hero-meta-sep">·</span>
+                  <span className="hero-meta-item hero-meta-avail">● Disponible</span>
+                </div>
 
-                {/* Avatar compact — visible uniquement sur mobile */}
+                {/* Mobile avatar */}
                 <div className="hero-mob-av">
                   <span className="hero-mob-av-ring" />
                   <span className="hero-mob-av-ring hero-mob-av-ring--2" />
@@ -607,14 +570,14 @@ export default function App() {
 
                 <div className={`hero-actions ${loaded ? 'hero-actions--in' : ''}`}>
                   <MagBtn className="btn btn--primary" onClick={() => scrollTo('projects')}>Voir mes projets</MagBtn>
-                  <MagBtn className="btn btn--ghost" onClick={() => scrollTo('contact')}>Me contacter</MagBtn>
+                  <MagBtn className="btn btn--ghost" onClick={() => scrollTo('contact')}>Me contacter ↗</MagBtn>
                   <MagBtn className="btn btn--outline" href="#" download>↓ CV</MagBtn>
                 </div>
 
                 <div className={`hero-socials ${loaded ? 'hero-socials--in' : ''}`}>
-                  <a href="https://github.com" target="_blank" rel="noreferrer" className="social-link">GitHub</a>
-                  <a href="https://linkedin.com" target="_blank" rel="noreferrer" className="social-link">LinkedIn</a>
-                  <a href="mailto:andrea.coustenoble@email.com" className="social-link">Email</a>
+                  <a href="https://github.com" target="_blank" rel="noreferrer" className="social-link">GitHub ↗</a>
+                  <a href="https://linkedin.com" target="_blank" rel="noreferrer" className="social-link">LinkedIn ↗</a>
+                  <a href="mailto:andrea.coustenoble@email.com" className="social-link">Email ↗</a>
                 </div>
               </div>
 
@@ -643,7 +606,7 @@ export default function App() {
 
           <Divider />
 
-          {/* ── SERVICES — dark green section ── */}
+          {/* ── SERVICES ── */}
           <section id="services" className="section section--forest">
             <Decor>
               <div className="sr sr--sv1" /><div className="sr sr--sv2" /><div className="sr sr--sv3" />
@@ -654,14 +617,17 @@ export default function App() {
             <StarField count={14} dark />
             <div className="container">
               <div className="section-header reveal">
-                <span className="section-label">Ce que je propose</span>
+                <span className="section-label"><span className="sl-num">01 /</span> Ce que je propose</span>
                 <div className="clip-reveal"><h2 className="clip-inner">Services</h2></div>
                 <p>Des solutions web sur mesure pour mettre en valeur votre activité</p>
               </div>
               <div className="services-grid">
                 {SERVICES.map((s, i) => (
                   <div key={s.id} className="service-card reveal" style={{ '--delay': `${i * 0.15}s` }}>
-                    <div className="service-icon">{s.icon}</div>
+                    <div className="service-head">
+                      <span className="service-num">{s.num}</span>
+                      <span className="service-icon">{s.icon}</span>
+                    </div>
                     <h3 className="service-title">{s.title}</h3>
                     <p className="service-desc">{s.description}</p>
                     <ul className="service-features">
@@ -669,7 +635,7 @@ export default function App() {
                     </ul>
                     <div className="service-footer">
                       <span className="service-price">Devis sur demande</span>
-                      <MagBtn className="btn btn--ghost btn--sm" onClick={() => scrollTo('contact')}>Demander un devis</MagBtn>
+                      <MagBtn className="btn btn--ghost btn--sm" onClick={() => scrollTo('contact')}>Demander un devis ↗</MagBtn>
                     </div>
                   </div>
                 ))}
@@ -691,7 +657,7 @@ export default function App() {
             </Decor>
             <div className="container">
               <div className="section-header reveal">
-                <span className="section-label">Réalisations</span>
+                <span className="section-label"><span className="sl-num">02 /</span> Réalisations</span>
                 <div className="clip-reveal"><h2 className="clip-inner">Projets</h2></div>
                 <p>Une sélection de ce que j'ai construit</p>
               </div>
@@ -704,18 +670,42 @@ export default function App() {
                         <p>Projet à venir</p>
                       </div>
                     ) : (
-                      <TiltCard key={p.id} className="project-card reveal" style={{ '--delay': `${i * 0.1}s` }}>
+                      <div key={p.id} className="project-card reveal" style={{ '--delay': `${i * 0.1}s` }}>
+                        {/* Head row */}
                         <div className="project-top">
-                          <span className="project-year">{p.year}</span>
+                          <div className="project-ids">
+                            <span className="project-num">Nº {String(p.id).padStart(3, '0')}</span>
+                            <span className="project-cat">{p.category}</span>
+                          </div>
                           <a href={p.link} className="project-arrow" aria-label="voir le projet">↗</a>
                         </div>
                         <ScrambleTitle text={p.title} className="project-title" />
                         <p className="project-desc">{p.description}</p>
+                        {/* Metadata row */}
+                        <div className="project-meta">
+                          <div className="project-meta-item">
+                            <span className="meta-label">Rôle</span>
+                            <span className="meta-value">{p.role}</span>
+                          </div>
+                          <div className="project-meta-item">
+                            <span className="meta-label">Année</span>
+                            <span className="meta-value">{p.year}</span>
+                          </div>
+                          <div className="project-meta-item">
+                            <span className="meta-label">Statut</span>
+                            <span className="meta-value">{p.status}</span>
+                          </div>
+                          <div className="project-meta-item">
+                            <span className="meta-label">Équipe</span>
+                            <span className="meta-value">{p.team}</span>
+                          </div>
+                        </div>
                         <div className="project-tags">
                           {p.tags.map(tag => <span key={tag} className="tag">{tag}</span>)}
                         </div>
+                        <a href={p.link} className="project-link">Voir le projet ↗</a>
                         <div className="project-line" />
-                      </TiltCard>
+                      </div>
                     )
                 ))}
               </div>
@@ -724,7 +714,7 @@ export default function App() {
 
           <Divider />
 
-          {/* ── SKILLS ── */}
+          {/* ── SKILLS / EXPERTISE ── */}
           <section id="skills" className="section">
             <StarField count={10} />
             <Decor>
@@ -735,21 +725,22 @@ export default function App() {
             </Decor>
             <div className="container">
               <div className="section-header reveal">
-                <span className="section-label">Compétences</span>
-                <div className="clip-reveal"><h2 className="clip-inner">Stack technique</h2></div>
-                <p>Technologies avec lesquelles je travaille</p>
+                <span className="section-label"><span className="sl-num">03 /</span> Compétences</span>
+                <div className="clip-reveal"><h2 className="clip-inner">Expertise</h2></div>
+                <p>Technologies et domaines avec lesquels je travaille</p>
               </div>
-              <div className="skills-grid">
-                {SKILLS.map((group, i) => (
-                  <div key={group.category} className="skills-group reveal" style={{ '--delay': `${i * 0.12}s` }}>
-                    <h3 className="skills-category">{group.category}</h3>
-                    <ul className="skills-list">
-                      {group.items.map((skill, j) => (
-                        <li key={skill} className="skill-item" style={{ '--j': j }}>
-                          <span className="skill-dot" />{skill}
-                        </li>
-                      ))}
-                    </ul>
+              <div className="expertise-grid">
+                {EXPERTISE.map((e, i) => (
+                  <div key={e.num} className="expertise-card reveal" style={{ '--delay': `${i * 0.12}s` }}>
+                    <div className="expertise-head">
+                      <span className="expertise-num">{e.num}</span>
+                      <span className="expertise-total">/ 04</span>
+                    </div>
+                    <h3 className="expertise-title">{e.title}</h3>
+                    <p className="expertise-desc">{e.description}</p>
+                    <div className="expertise-tags">
+                      {e.items.map(item => <span key={item} className="tag">{item}</span>)}
+                    </div>
                   </div>
                 ))}
               </div>
@@ -758,8 +749,8 @@ export default function App() {
 
           <Divider />
 
-          {/* ── TESTIMONIALS ── */}
-          <section className="section section--alt">
+          {/* ── PROCESS / MÉTHODE ── */}
+          <section id="process" className="section section--alt">
             <StarField count={8} />
             <Decor>
               <div className="sr sr--tm1" /><div className="sr sr--tm2" />
@@ -768,14 +759,23 @@ export default function App() {
             </Decor>
             <div className="container">
               <div className="section-header reveal">
-                <span className="section-label">Ils me font confiance</span>
-                <div className="clip-reveal"><h2 className="clip-inner">Témoignages</h2></div>
-                <p>Les retours de mes clients</p>
+                <span className="section-label"><span className="sl-num">04 /</span> Ma méthode</span>
+                <div className="clip-reveal"><h2 className="clip-inner">Processus</h2></div>
+                <p>De la première idée à la mise en ligne</p>
               </div>
-              <div className="testimonials-empty reveal">
-                <span className="t-icon">◈</span>
-                <p>Les premiers témoignages arrivent bientôt.</p>
-                <MagBtn className="btn btn--ghost" onClick={() => scrollTo('contact')}>Devenir mon premier client</MagBtn>
+              <div className="process-list">
+                {PROCESS.map((step, i) => (
+                  <div key={step.num} className="process-step reveal" style={{ '--delay': `${i * 0.1}s` }}>
+                    <span className="process-num">{step.num}</span>
+                    <div className="process-body">
+                      <div className="process-head">
+                        <h3 className="process-title">{step.title}</h3>
+                        <span className="process-dur">{step.duration}</span>
+                      </div>
+                      <p className="process-desc">{step.desc}</p>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           </section>
@@ -792,7 +792,7 @@ export default function App() {
             </Decor>
             <div className="container container--narrow">
               <div className="section-header reveal">
-                <span className="section-label">Parlons-en</span>
+                <span className="section-label"><span className="sl-num">05 /</span> Parlons-en</span>
                 <div className="clip-reveal"><h2 className="clip-inner">Contact</h2></div>
                 <p>Un projet en tête ? Décrivez-le moi.</p>
               </div>
@@ -831,7 +831,7 @@ export default function App() {
                     </div>
                   )}
                   <MagBtn type="submit" className="btn btn--primary btn--full" disabled={sending}>
-                    {sending ? 'Envoi en cours…' : 'Envoyer le message'}
+                    {sending ? 'Envoi en cours…' : 'Envoyer le message ↗'}
                   </MagBtn>
                 </form>
               )}
@@ -840,8 +840,13 @@ export default function App() {
         </main>
 
         <footer className="footer">
-          <div className="container">
+          <div className="container footer-inner">
+            <span className="footer-logo">AC</span>
             <p>© 2025 Andrea Coustenoble — Développé avec React & déployé sur Vercel</p>
+            <div className="footer-links">
+              <a href="https://github.com" target="_blank" rel="noreferrer">GitHub ↗</a>
+              <a href="https://linkedin.com" target="_blank" rel="noreferrer">LinkedIn ↗</a>
+            </div>
           </div>
         </footer>
 
