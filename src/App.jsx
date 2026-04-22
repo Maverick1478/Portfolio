@@ -725,7 +725,7 @@ export default function App() {
                       <div className="sc-card-img">
                         <img src="/projects/biblly-discover.png" alt="Biblly — Découvrir" draggable={false} />
                         <div className="sc-card-img-meta">
-                          <span className="sc-meta-cat">Page Découvrir</span>
+                          <span className="sc-meta-cat">Découvrir</span>
                           <span className="sc-meta-year">{PROJECTS[0].year}</span>
                         </div>
                       </div>
@@ -737,38 +737,9 @@ export default function App() {
                       <div className="sc-card-img">
                         <img src="/projects/biblly-profile.png" alt="Biblly — Profil" draggable={false} />
                         <div className="sc-card-img-meta">
-                          <span className="sc-meta-cat">Page Profil</span>
+                          <span className="sc-meta-cat">Mon profil</span>
                           <span className="sc-meta-year">{PROJECTS[0].year}</span>
                         </div>
-                      </div>
-                    ),
-                  },
-                  {
-                    id: 'desc',
-                    content: (
-                      <div className="sc-card-info">
-                        <span className="sc-card-label">À propos du projet</span>
-                        <h3 className="sc-card-name">{PROJECTS[0].title}</h3>
-                        <p className="sc-card-desc">{PROJECTS[0].description}</p>
-                        <div className="sc-card-tags">
-                          {PROJECTS[0].tags.map(t => <span key={t} className="tag">{t}</span>)}
-                        </div>
-                      </div>
-                    ),
-                  },
-                  {
-                    id: 'cta',
-                    content: (
-                      <div className="sc-card-cta">
-                        <div className="sc-card-cta-top">
-                          <span className="sc-card-role">{PROJECTS[0].role}</span>
-                          <span className="sc-card-status">{PROJECTS[0].status}</span>
-                        </div>
-                        <h3 className="sc-card-name">{PROJECTS[0].title}</h3>
-                        <p className="sc-card-cta-sub">Plateforme sociale de lecture — disponible en ligne.</p>
-                        <a href={PROJECTS[0].link} target="_blank" rel="noreferrer" className="btn btn--primary sc-card-btn" onClick={e => e.stopPropagation()}>
-                          Voir le projet ↗
-                        </a>
                       </div>
                     ),
                   },
