@@ -1,4 +1,7 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { StackedCardsInteraction } from './components/ui/stacked-cards-interaction'
+import { AnimatedSlideshow } from './components/ui/animated-slideshow'
 import './App.css'
 
 const W3F_KEY = '1c6f1269-cc49-4b16-bae9-d7d8462d8e1a'
@@ -702,36 +705,50 @@ export default function App() {
                 <span className="section-label"><span className="sl-num">02 /</span> Réalisations</span>
                 <div className="clip-reveal"><h2 className="clip-inner">Projets</h2></div>
               </div>
-              <div className="projects-grid">
-                {PROJECTS.map((p, i) => (
-                  <div key={p.id} className="project-card reveal" style={{ '--delay': `${i * 0.1}s` }}>
-                    <div className="project-thumb">
-                      <img src={p.image} alt={p.title} loading="lazy" />
-                    </div>
-                    {/* Static footer — always visible */}
-                    <div className="project-footer">
-                      <div className="project-footer-left">
-                        <span className="project-cat">{p.category}</span>
-                        <h3 className="project-title">{p.title}</h3>
-                      </div>
-                      <span className="project-year">{p.year}</span>
-                    </div>
-                    {/* Hover overlay */}
-                    <div className="project-overlay">
-                      <div className="project-overlay-inner">
-                        <span className="project-cat">{p.category}</span>
-                        <h3 className="project-overlay-title">{p.title}</h3>
-                        <p className="project-overlay-desc">{p.description}</p>
-                        <div className="project-tags">
-                          {p.tags.map(tag => <span key={tag} className="tag">{tag}</span>)}
+              <div className="reveal">
+                <StackedCardsInteraction cards={[
+                  {
+                    id: 'img',
+                    content: (
+                      <div className="sc-card-img">
+                        <img src={PROJECTS[0].image} alt={PROJECTS[0].title} draggable={false} />
+                        <div className="sc-card-img-meta">
+                          <span className="sc-meta-cat">{PROJECTS[0].category}</span>
+                          <span className="sc-meta-year">{PROJECTS[0].year}</span>
                         </div>
-                        <a href={p.link} className="project-overlay-cta" target="_blank" rel="noreferrer">
-                          Voir le projet <span>↗</span>
+                      </div>
+                    ),
+                  },
+                  {
+                    id: 'desc',
+                    content: (
+                      <div className="sc-card-info">
+                        <span className="sc-card-label">À propos du projet</span>
+                        <h3 className="sc-card-name">{PROJECTS[0].title}</h3>
+                        <p className="sc-card-desc">{PROJECTS[0].description}</p>
+                        <div className="sc-card-tags">
+                          {PROJECTS[0].tags.map(t => <span key={t} className="tag">{t}</span>)}
+                        </div>
+                      </div>
+                    ),
+                  },
+                  {
+                    id: 'cta',
+                    content: (
+                      <div className="sc-card-cta">
+                        <div className="sc-card-cta-top">
+                          <span className="sc-card-role">{PROJECTS[0].role}</span>
+                          <span className="sc-card-status">{PROJECTS[0].status}</span>
+                        </div>
+                        <h3 className="sc-card-name">{PROJECTS[0].title}</h3>
+                        <p className="sc-card-cta-sub">Plateforme sociale de lecture — disponible en ligne.</p>
+                        <a href={PROJECTS[0].link} target="_blank" rel="noreferrer" className="btn btn--primary sc-card-btn" onClick={e => e.stopPropagation()}>
+                          Voir le projet ↗
                         </a>
                       </div>
-                    </div>
-                  </div>
-                ))}
+                    ),
+                  },
+                ]} />
               </div>
             </div>
           </section>
@@ -752,19 +769,8 @@ export default function App() {
                 <span className="section-label"><span className="sl-num">03 /</span> Compétences</span>
                 <div className="clip-reveal"><h2 className="clip-inner">Expertise</h2></div>
               </div>
-              <div className="expertise-grid">
-                {EXPERTISE.map((e, i) => (
-                  <TiltCard key={e.num} className="expertise-card reveal" style={{ '--delay': `${i * 0.12}s` }}>
-                    <div className="expertise-head">
-                      <span className="expertise-num">{e.num}</span>
-                      <span className="expertise-total">/ 04</span>
-                    </div>
-                    <h3 className="expertise-title">{e.title}</h3>
-                    <div className="expertise-tags">
-                      {e.items.map(item => <span key={item} className="tag">{item}</span>)}
-                    </div>
-                  </TiltCard>
-                ))}
+              <div className="reveal">
+                <AnimatedSlideshow slides={EXPERTISE} />
               </div>
             </div>
           </section>
