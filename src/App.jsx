@@ -720,25 +720,46 @@ export default function App() {
                     ),
                   },
                   {
-                    id: 'img-discover',
+                    id: 'info-dark',
                     content: (
-                      <div className="sc-card-img">
-                        <img src="/projects/biblly-discover.png" alt="Biblly — Découvrir" draggable={false} />
-                        <div className="sc-card-img-meta">
-                          <span className="sc-meta-cat">Découvrir</span>
-                          <span className="sc-meta-year">{PROJECTS[0].year}</span>
+                      <div className="sc-card-brand sc-card-brand--dark">
+                        <div className="scb-top">
+                          <span className="scb-logo">Biblly.</span>
+                          <span className="scb-year">{PROJECTS[0].year}</span>
+                        </div>
+                        <div className="scb-mid">
+                          <span className="scb-cat">{PROJECTS[0].category}</span>
+                          <h3 className="scb-title">{PROJECTS[0].title}</h3>
+                          <p className="scb-desc">{PROJECTS[0].description}</p>
+                        </div>
+                        <div className="scb-tags">
+                          {PROJECTS[0].tags.map(t => <span key={t} className="scb-tag scb-tag--dark">{t}</span>)}
                         </div>
                       </div>
                     ),
                   },
                   {
-                    id: 'img-profile',
+                    id: 'info-light',
                     content: (
-                      <div className="sc-card-img">
-                        <img src="/projects/biblly-profile.png" alt="Biblly — Profil" draggable={false} />
-                        <div className="sc-card-img-meta">
-                          <span className="sc-meta-cat">Mon profil</span>
-                          <span className="sc-meta-year">{PROJECTS[0].year}</span>
+                      <div className="sc-card-brand sc-card-brand--light">
+                        <div className="scb-top">
+                          <span className="scb-badge">{PROJECTS[0].role}</span>
+                          <span className="scb-badge scb-badge--gold">{PROJECTS[0].status} ✦</span>
+                        </div>
+                        <div className="scb-mid">
+                          <h3 className="scb-title scb-title--dark">{PROJECTS[0].title}</h3>
+                          <span className="scb-year-big">{PROJECTS[0].year}</span>
+                        </div>
+                        <div className="scb-bottom">
+                          <a
+                            href={PROJECTS[0].link}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="scb-cta"
+                            onClick={e => e.stopPropagation()}
+                          >
+                            Voir le projet <span className="scb-cta-arrow">↗</span>
+                          </a>
                         </div>
                       </div>
                     ),
