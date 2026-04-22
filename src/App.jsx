@@ -708,12 +708,36 @@ export default function App() {
               <div className="reveal">
                 <StackedCardsInteraction cards={[
                   {
-                    id: 'img',
+                    id: 'img-home',
                     content: (
                       <div className="sc-card-img">
-                        <img src={PROJECTS[0].image} alt={PROJECTS[0].title} draggable={false} />
+                        <img src={PROJECTS[0].image} alt="Biblly — accueil" draggable={false} />
                         <div className="sc-card-img-meta">
-                          <span className="sc-meta-cat">{PROJECTS[0].category}</span>
+                          <span className="sc-meta-cat">Accueil</span>
+                          <span className="sc-meta-year">{PROJECTS[0].year}</span>
+                        </div>
+                      </div>
+                    ),
+                  },
+                  {
+                    id: 'img-discover',
+                    content: (
+                      <div className="sc-card-img">
+                        <img src="/projects/biblly-discover.png" alt="Biblly — Découvrir" draggable={false} />
+                        <div className="sc-card-img-meta">
+                          <span className="sc-meta-cat">Page Découvrir</span>
+                          <span className="sc-meta-year">{PROJECTS[0].year}</span>
+                        </div>
+                      </div>
+                    ),
+                  },
+                  {
+                    id: 'img-profile',
+                    content: (
+                      <div className="sc-card-img">
+                        <img src="/projects/biblly-profile.png" alt="Biblly — Profil" draggable={false} />
+                        <div className="sc-card-img-meta">
+                          <span className="sc-meta-cat">Page Profil</span>
                           <span className="sc-meta-year">{PROJECTS[0].year}</span>
                         </div>
                       </div>
